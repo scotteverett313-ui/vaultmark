@@ -26,6 +26,61 @@ export function formatEdition(label: LabelDraft): string {
   return EDITION_LABELS[label.editionType];
 }
 
+const CSV_COLUMNS: [string, (p: VaultPiece) => string][] = [
+  ["Certificate", (p) => p.certificateNumber],
+  ["Vault ID", (p) => p.id],
+  ["Title", (p) => p.title],
+  ["Artist", (p) => p.artist],
+  ["Year", (p) => p.year],
+  ["Medium", (p) => p.medium],
+  ["Dimensions", (p) => p.dimensions],
+  ["Edition", (p) => p.edition],
+  ["Status", (p) => p.status],
+  ["Appraised Value", (p) => p.value],
+  ["Appraiser", (p) => p.appraiser],
+  ["Provenance", (p) => p.provenance],
+  ["Notes", (p) => p.notes],
+  ["Gallery", (p) => p.gallery],
+  ["Signatory", (p) => p.signatory],
+  ["QR Symbol", (p) => p.qrSymbol],
+  ["Masked Pixels", (p) => String(p.maskedPixelCount)],
+  ["Image Fingerprint", (p) => p.imageFingerprint],
+  ["Pixel Hash", (p) => p.pixelHash],
+  ["Capture Source", (p) => p.captureSource],
+  ["Vaulted At", (p) => p.vaultedAt],
+];
+
+function csvCell(value: string): string {
+  // Titles and provenance routinely contain commas and quotes, and a stray
+  // newline would silently split a row when the file is reopened.
+  return /[",\n\r]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+}
+
+// Inventory export. Deliberately omits key credentials: this is the file that
+// gets mailed around and opened in a spreadsheet.
+export function buildCollectionCsv(pieces: VaultPiece[]): string {
+  const header = CSV_COLUMNS.map(([name]) => csvCell(name)).join(",");
+  const rows = pieces.map((piece) => CSV_COLUMNS.map(([, read]) => csvCell(read(piece))).join(","));
+  return [header, ...rows].join("\n");
+}
+
+// Full backup, keys included — the only way to move a library between devices
+// without losing the credentials. The UI warns before handing this over.
+export function buildCollectionJson(pieces: VaultPiece[], sessionType: string | null, startedAt: string | null): string {
+  return JSON.stringify(
+    {
+      exportedAt: new Date().toISOString(),
+      sessionType,
+      startedAt,
+      pieceCount: pieces.length,
+      containsKeyCredentials: true,
+      pieces,
+    },
+    null,
+    2,
+  );
+}
+
 // The downloadable certificate. Plain text on purpose: it has to stay
 // readable in fifty years without a PDF reader or this app.
 export function buildCertificateText(piece: VaultPiece): string {

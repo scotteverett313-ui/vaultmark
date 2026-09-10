@@ -1,6 +1,14 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildCertificateText, buildVaultPiece, certificateNumber, formatDimensions, formatEdition } from "./records.ts";
+import {
+  buildCertificateText,
+  buildCollectionCsv,
+  buildCollectionJson,
+  buildVaultPiece,
+  certificateNumber,
+  formatDimensions,
+  formatEdition,
+} from "./records.ts";
 import type { LabelDraft } from "../components/IntakeContext.tsx";
 
 function draft(overrides: Partial<LabelDraft> = {}): LabelDraft {
@@ -147,4 +155,39 @@ test("buildCertificateText omits the gallery block for a solo record", () => {
   const text = buildCertificateText(piece);
   assert.ok(!text.includes("GALLERY"), "no empty gallery section");
   assert.match(text, /Yuki Tanaka/);
+});
+
+test("CSV escapes the characters that would otherwise break a row", () => {
+  const piece = buildVaultPiece({
+    label: draft({
+      title: 'Untitled, No. 7 "Cerulean"',
+      provenance: "Acquired 2023.\nExhibited 2024.",
+      notes: "Says: he said \"fine\"",
+    }),
+    vault,
+    captured,
+    pieceCount: 0,
+    thumbnailUrl: "",
+  });
+  const csv = buildCollectionCsv([piece]);
+  const [header, ...rest] = csv.split("\n");
+
+  assert.match(header, /^Certificate,Vault ID,Title,/);
+  // A comma inside a title must be quoted, and inner quotes doubled.
+  assert.ok(csv.includes('"Untitled, No. 7 ""Cerulean"""'), "title quoted and escaped");
+  // The embedded newline stays inside its quoted cell rather than making a row.
+  assert.ok(csv.includes('"Acquired 2023.\nExhibited 2024."'), "newline kept inside the cell");
+  assert.equal(rest.join("\n").split('"').length % 2, 1, "quotes balance");
+  // Keys never appear in an inventory export.
+  assert.ok(!csv.includes(vault.encodedKey), "no key credential in CSV");
+});
+
+test("JSON backup carries the keys and says so", () => {
+  const piece = buildVaultPiece({ label: draft(), vault, captured, pieceCount: 0, thumbnailUrl: "" });
+  const parsed = JSON.parse(buildCollectionJson([piece], "gallery", "2026-01-01T00:00:00.000Z"));
+
+  assert.equal(parsed.pieceCount, 1);
+  assert.equal(parsed.sessionType, "gallery");
+  assert.equal(parsed.containsKeyCredentials, true);
+  assert.equal(parsed.pieces[0].key, vault.encodedKey);
 });
