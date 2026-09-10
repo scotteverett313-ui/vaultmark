@@ -3,6 +3,7 @@
 import { useToast } from "@/components/Toast";
 import type { LabelDraft } from "@/components/IntakeContext";
 import type { SessionType } from "@/lib/types";
+import { EDITION_LABELS, EDITION_TYPES } from "@/lib/records";
 
 const MEDIUM_SUGGESTIONS = [
   "Oil on canvas",
@@ -20,12 +21,6 @@ const MEDIUM_SUGGESTIONS = [
   "Bronze",
 ];
 
-const EDITION_TYPES: { value: LabelDraft["editionType"]; label: string }[] = [
-  { value: "1of1", label: "1 of 1 (Unique)" },
-  { value: "limited", label: "Limited Edition" },
-  { value: "ap", label: "Artist Proof" },
-  { value: "open", label: "Open Edition" },
-];
 
 export interface VaultRecordRow {
   label: string;
@@ -161,9 +156,9 @@ export default function LabelForm({ value, onChange, sessionType, vaultRecord, e
           onChange={(e) => onChange({ editionType: e.target.value as LabelDraft["editionType"] })}
           className="w-full cursor-pointer border border-vm-border bg-vm-surface px-2.5 py-2 font-vm-mono text-[11px] text-vm-ink outline-none transition-colors focus:border-vm-gold-2"
         >
-          {EDITION_TYPES.map((t) => (
-            <option key={t.value} value={t.value}>
-              {t.label}
+          {EDITION_TYPES.map((type) => (
+            <option key={type} value={type}>
+              {EDITION_LABELS[type]}
             </option>
           ))}
         </select>

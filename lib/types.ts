@@ -35,6 +35,8 @@ export interface VaultPiece {
   appraiser: string;
   provenance: string;
   notes: string;
+  gallery: string;
+  signatory: string;
   qrSymbol: QRSymbolId;
   maskedPixelCount: number;
   imageFingerprint: string;
@@ -44,5 +46,7 @@ export interface VaultPiece {
   captureSource: "upload" | "camera";
   vaultedAt: string;
   key: string;
-  thumbColors: { bg: string; fg: string };
+  // A small JPEG of the vaulted square. Kept tiny on purpose: pieces persist
+  // to sessionStorage, so full-size previews would blow the quota.
+  thumbnailUrl: string;
 }

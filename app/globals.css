@@ -1,6 +1,15 @@
 @import "tailwindcss";
 @import "./tokens.css";
 
+@keyframes vm-seal {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
 @layer base {
   *,
   *::before,

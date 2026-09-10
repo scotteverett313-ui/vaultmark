@@ -25,7 +25,9 @@ function makePiece(overrides: Partial<VaultPiece> = {}): VaultPiece {
     captureSource: "upload",
     vaultedAt: "2026-01-01T00:00:00.000Z",
     key: "encoded-key",
-    thumbColors: { bg: "#1A2E4A", fg: "#4A8ABB" },
+    gallery: "Meridian Gallery",
+    signatory: "M. Chen, Director",
+    thumbnailUrl: "data:image/jpeg;base64,x",
     ...overrides,
   };
 }

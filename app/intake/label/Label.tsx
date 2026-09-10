@@ -6,12 +6,9 @@ import { useRouter } from "next/navigation";
 import LabelForm from "@/components/LabelForm";
 import { useIntake, type LabelDraft } from "@/components/IntakeContext";
 import { useSession } from "@/components/SessionContext";
+import { certificateNumber } from "@/lib/records";
 
 type LabelErrors = Partial<Record<keyof LabelDraft, string>>;
-
-export function certificateNumber(pieceCount: number) {
-  return `VMRK-CERT-${String(pieceCount + 1).padStart(4, "0")}`;
-}
 
 export default function Label() {
   const router = useRouter();
