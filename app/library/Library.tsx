@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import PieceCard from "@/components/PieceCard";
+import PieceModal from "@/components/PieceModal";
 import PieceRow, { ROW_GRID } from "@/components/PieceRow";
 import { useSession } from "@/components/SessionContext";
 import { useToast } from "@/components/Toast";
@@ -28,7 +29,7 @@ const COLUMNS: { label: string; field?: SortField }[] = [
 
 export default function Library() {
   const router = useRouter();
-  const { restored, sessionType, startedAt, pieces, persistFailed } = useSession();
+  const { restored, sessionType, startedAt, pieces, persistFailed, updatePieceStatus } = useSession();
   const { showToast } = useToast();
 
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -37,6 +38,7 @@ export default function Library() {
   const [artist, setArtist] = useState("all");
   const [sortField, setSortField] = useState<SortField>("title");
   const [sortAsc, setSortAsc] = useState(true);
+  const [openId, setOpenId] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -247,12 +249,7 @@ export default function Library() {
       ) : view === "grid" ? (
         <div className="grid grid-cols-2 gap-px p-px sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {visible.map((piece) => (
-            <PieceCard
-              key={piece.id}
-              piece={piece}
-              onDownloadKey={downloadKey}
-              onDownloadCertificate={downloadCertificate}
-            />
+            <PieceCard key={piece.id} piece={piece} onDownloadKey={downloadKey} onOpen={(p) => setOpenId(p.id)} />
           ))}
         </div>
       ) : (
@@ -275,16 +272,19 @@ export default function Library() {
               ))}
             </div>
             {visible.map((piece) => (
-              <PieceRow
-                key={piece.id}
-                piece={piece}
-                onDownloadKey={downloadKey}
-                onDownloadCertificate={downloadCertificate}
-              />
+              <PieceRow key={piece.id} piece={piece} onDownloadKey={downloadKey} onOpen={(p) => setOpenId(p.id)} />
             ))}
           </div>
         </div>
       )}
+
+      <PieceModal
+        piece={pieces.find((p) => p.id === openId) ?? null}
+        onClose={() => setOpenId(null)}
+        onStatusChange={updatePieceStatus}
+        onDownloadKey={downloadKey}
+        onDownloadCertificate={downloadCertificate}
+      />
     </div>
   );
 }

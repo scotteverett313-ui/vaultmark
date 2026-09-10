@@ -7,10 +7,10 @@ import type { VaultPiece } from "@/lib/types";
 interface PieceCardProps {
   piece: VaultPiece;
   onDownloadKey: (piece: VaultPiece) => void;
-  onDownloadCertificate: (piece: VaultPiece) => void;
+  onOpen: (piece: VaultPiece) => void;
 }
 
-export default function PieceCard({ piece, onDownloadKey, onDownloadCertificate }: PieceCardProps) {
+export default function PieceCard({ piece, onDownloadKey, onOpen }: PieceCardProps) {
   return (
     <article className="flex flex-col bg-vm-surface ring-1 ring-vm-border transition-colors hover:bg-vm-raised">
       <div className="relative aspect-square w-full overflow-hidden bg-vm-bg">
@@ -43,10 +43,10 @@ export default function PieceCard({ piece, onDownloadKey, onDownloadCertificate 
         </button>
         <button
           type="button"
-          onClick={() => onDownloadCertificate(piece)}
+          onClick={() => onOpen(piece)}
           className="bg-vm-panel px-2 py-2 font-vm-mono text-[8px] uppercase tracking-[0.08em] text-vm-dim transition-colors hover:bg-vm-gold-bg hover:text-vm-gold"
         >
-          ↓ Cert
+          View →
         </button>
       </div>
     </article>

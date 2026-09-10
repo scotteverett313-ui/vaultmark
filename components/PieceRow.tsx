@@ -9,10 +9,10 @@ export const ROW_GRID = "grid-cols-[48px_minmax(160px,1fr)_140px_150px_70px_100p
 interface PieceRowProps {
   piece: VaultPiece;
   onDownloadKey: (piece: VaultPiece) => void;
-  onDownloadCertificate: (piece: VaultPiece) => void;
+  onOpen: (piece: VaultPiece) => void;
 }
 
-export default function PieceRow({ piece, onDownloadKey, onDownloadCertificate }: PieceRowProps) {
+export default function PieceRow({ piece, onDownloadKey, onOpen }: PieceRowProps) {
   return (
     <div className={`grid ${ROW_GRID} border-b border-vm-border transition-colors hover:bg-vm-surface`}>
       <Cell>
@@ -35,7 +35,7 @@ export default function PieceRow({ piece, onDownloadKey, onDownloadCertificate }
       <Cell>
         <div className="flex gap-1.5">
           <RowButton onClick={() => onDownloadKey(piece)}>↓ Key</RowButton>
-          <RowButton onClick={() => onDownloadCertificate(piece)}>↓ Cert</RowButton>
+          <RowButton onClick={() => onOpen(piece)}>View</RowButton>
         </div>
       </Cell>
     </div>

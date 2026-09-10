@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "@/components/Toast";
-import type { SessionType, VaultPiece } from "@/lib/types";
+import type { PieceStatus, SessionType, VaultPiece } from "@/lib/types";
 import { SESSION_STORAGE_KEY, parseStoredSession, serializeSession } from "@/lib/session";
 
 export interface SessionContextValue {
@@ -16,6 +16,7 @@ export interface SessionContextValue {
   startSession: (type: SessionType) => void;
   endSession: () => void;
   addPiece: (piece: VaultPiece) => void;
+  updatePieceStatus: (id: string, status: PieceStatus) => void;
 }
 
 interface SessionState {
@@ -82,6 +83,13 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     setState((prev) => ({ ...prev, pieces: [...prev.pieces, piece] }));
   }, []);
 
+  const updatePieceStatus = useCallback((id: string, status: PieceStatus) => {
+    setState((prev) => ({
+      ...prev,
+      pieces: prev.pieces.map((piece) => (piece.id === id ? { ...piece, status } : piece)),
+    }));
+  }, []);
+
   const value = useMemo<SessionContextValue>(
     () => ({
       restored,
@@ -93,8 +101,9 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       startSession,
       endSession,
       addPiece,
+      updatePieceStatus,
     }),
-    [restored, state, persistFailed, startSession, endSession, addPiece],
+    [restored, state, persistFailed, startSession, endSession, addPiece, updatePieceStatus],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;
