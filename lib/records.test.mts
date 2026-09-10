@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildVaultPiece, certificateNumber, formatDimensions, formatEdition } from "./records.ts";
+import { buildCertificateText, buildVaultPiece, certificateNumber, formatDimensions, formatEdition } from "./records.ts";
 import type { LabelDraft } from "../components/IntakeContext.tsx";
 
 function draft(overrides: Partial<LabelDraft> = {}): LabelDraft {
@@ -119,4 +119,32 @@ test("a camera capture keeps its lossy-master flag on the record", () => {
     thumbnailUrl: "",
   });
   assert.equal(piece.captureSource, "camera");
+});
+
+test("buildCertificateText carries the full authentication record", () => {
+  const piece = buildVaultPiece({ label: draft(), vault, captured, pieceCount: 0, thumbnailUrl: "" });
+  const text = buildCertificateText(piece);
+
+  assert.match(text, /VAULTMARK — CERTIFICATE OF AUTHENTICITY/);
+  assert.match(text, /VMRK-CERT-0001/);
+  assert.match(text, /Threshold \(Diptych, Left\)/);
+  // Hashes appear in full — a truncated certificate cannot be checked later.
+  assert.ok(text.includes("a".repeat(64)), "image fingerprint in full");
+  assert.ok(text.includes("b".repeat(64)), "pixel hash in full");
+  assert.match(text, /Capture Source    Upload — lossless/);
+  assert.match(text, /Meridian Gallery/);
+  assert.match(text, /not retained by Vaultmark/);
+});
+
+test("buildCertificateText omits the gallery block for a solo record", () => {
+  const piece = buildVaultPiece({
+    label: draft({ gallery: "", signatory: "" }),
+    vault,
+    captured,
+    pieceCount: 0,
+    thumbnailUrl: "",
+  });
+  const text = buildCertificateText(piece);
+  assert.ok(!text.includes("GALLERY"), "no empty gallery section");
+  assert.match(text, /Yuki Tanaka/);
 });

@@ -26,6 +26,58 @@ export function formatEdition(label: LabelDraft): string {
   return EDITION_LABELS[label.editionType];
 }
 
+// The downloadable certificate. Plain text on purpose: it has to stay
+// readable in fifty years without a PDF reader or this app.
+export function buildCertificateText(piece: VaultPiece): string {
+  const rule = "─".repeat(52);
+  const lines = [
+    "VAULTMARK — CERTIFICATE OF AUTHENTICITY",
+    "═".repeat(52),
+    "",
+    `Certificate No.   ${piece.certificateNumber}`,
+    `Vault ID          ${piece.id}`,
+    `Issued            ${piece.vaultedAt}`,
+    "",
+    "ARTWORK",
+    rule,
+    `Title             ${piece.title}`,
+    `Artist            ${piece.artist}`,
+    `Year              ${piece.year}`,
+    `Medium            ${piece.medium}`,
+    `Dimensions        ${piece.dimensions}`,
+    `Edition           ${piece.edition}`,
+    "",
+    "AUTHENTICATION",
+    rule,
+    `QR Symbol         ${piece.qrSymbol}`,
+    `Masked Pixels     ${piece.maskedPixelCount}`,
+    `Image Fingerprint ${piece.imageFingerprint}`,
+    `Pixel Hash        ${piece.pixelHash}`,
+    `Capture Source    ${piece.captureSource === "camera" ? "Camera — lossy master" : "Upload — lossless"}`,
+    "",
+    "PROVENANCE",
+    rule,
+    piece.provenance,
+    "",
+    `Appraised Value   ${piece.value}`,
+    `Appraiser         ${piece.appraiser}`,
+  ];
+
+  if (piece.gallery !== "—" || piece.signatory !== "—") {
+    lines.push("", "GALLERY", rule, `Gallery           ${piece.gallery}`, `Signatory         ${piece.signatory}`);
+  }
+
+  lines.push(
+    "",
+    rule,
+    "VAULTMARK AUTHENTICATION PROTOCOL",
+    "This document records pixel-level cryptographic authentication.",
+    "The key credential is held by the owner and is not retained by Vaultmark.",
+  );
+
+  return lines.join("\n");
+}
+
 export interface BuildVaultPieceParams {
   label: LabelDraft;
   vault: VaultDraft;
