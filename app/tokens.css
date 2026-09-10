@@ -1,0 +1,25 @@
+/* Vaultmark design tokens — ported from the HTML prototypes (v2/v4/v5/dashboard-demo).
+   Prefixed vm- so they extend Tailwind's theme without touching the portfolio site's tokens. */
+@theme {
+  --color-vm-bg: #09090c;
+  --color-vm-panel: #0f0f14;
+  --color-vm-surface: #141419;
+  --color-vm-raised: #1a1a22;
+  --color-vm-border: #222230;
+  --color-vm-border-2: #32324a;
+  --color-vm-ink: #eae6da;
+  --color-vm-mid: #8a8680;
+  --color-vm-dim: #404048;
+  --color-vm-gold: #c8a84a;
+  --color-vm-gold-2: #8a6f2a;
+  --color-vm-gold-bg: rgba(200, 168, 74, 0.07);
+  --color-vm-green: #3a8a5a;
+  --color-vm-green-bg: rgba(58, 138, 90, 0.1);
+  --color-vm-red: #8a3a3a;
+  --color-vm-blue: #4a7ac8;
+  --color-vm-amber: #c87a3a;
+
+  --font-vm-mono: "Courier New", Courier, monospace;
+  --font-vm-sans: system-ui, -apple-system, sans-serif;
+  --font-vm-serif: Georgia, "Times New Roman", serif;
+}

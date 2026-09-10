@@ -1,0 +1,1 @@
+export const INTAKE_STEPS = ["CAPTURE", "VAULT", "LABEL", "CONFIRM", "KEY ISSUED"];
