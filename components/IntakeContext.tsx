@@ -78,7 +78,7 @@ const IntakeContext = createContext<IntakeContextValue | null>(null);
 
 // Holds the piece currently being vaulted while the user moves through the
 // five intake routes. Deliberately in-memory only: the raw pixel buffer is
-// megabytes and cannot go in sessionStorage, and it is only meaningful for
+// megabytes and cannot go in localStorage, and it is only meaningful for
 // the duration of one intake. Leaving /intake drops it.
 export function IntakeProvider({ children }: { children: React.ReactNode }) {
   const [captured, setCaptured] = useState<CapturedImage | null>(null);

@@ -16,15 +16,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="min-h-screen bg-vm-bg font-vm-mono text-xs text-vm-ink">
-        <SessionProvider>
-          <ToastProvider>
+        <ToastProvider>
+          <SessionProvider>
             <header className="sticky top-0 z-50 flex h-[3.25rem] items-center gap-5 border-b border-vm-border bg-vm-panel px-7">
               <span className="text-base font-bold tracking-[0.2em] text-vm-gold">VAULTMARK</span>
               <span className="text-[9px] tracking-[0.12em] text-vm-dim">DIGITAL ART AUTHENTICATION</span>
             </header>
             {children}
-          </ToastProvider>
-        </SessionProvider>
+          </SessionProvider>
+        </ToastProvider>
       </body>
     </html>
   );

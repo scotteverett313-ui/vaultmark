@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useToast } from "@/components/Toast";
 import type { SessionType, VaultPiece } from "@/lib/types";
 import { SESSION_STORAGE_KEY, parseStoredSession, serializeSession } from "@/lib/session";
 
@@ -10,6 +11,8 @@ export interface SessionContextValue {
   startedAt: string | null;
   pieces: VaultPiece[];
   pieceCount: number;
+  /** True once a write to storage has failed — the library is memory-only. */
+  persistFailed: boolean;
   startSession: (type: SessionType) => void;
   endSession: () => void;
   addPiece: (piece: VaultPiece) => void;
@@ -31,13 +34,16 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   // session need to know whether a restore has happened yet — otherwise a
   // refresh mid-workflow looks identical to no session at all.
   const [restored, setRestored] = useState(false);
+  const [persistFailed, setPersistFailed] = useState(false);
+  const { showToast } = useToast();
+  const warnedRef = useRef(false);
 
   useEffect(() => {
     try {
-      const stored = parseStoredSession(window.sessionStorage.getItem(SESSION_STORAGE_KEY));
+      const stored = parseStoredSession(window.localStorage.getItem(SESSION_STORAGE_KEY));
       if (stored) setState(stored);
     } catch {
-      // sessionStorage throws in private or sandboxed contexts; start fresh.
+      // localStorage throws in private or sandboxed contexts; start fresh.
     }
     setRestored(true);
   }, []);
@@ -46,17 +52,25 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     if (!restored) return;
     try {
       if (state.sessionType && state.startedAt) {
-        window.sessionStorage.setItem(
+        window.localStorage.setItem(
           SESSION_STORAGE_KEY,
           serializeSession({ sessionType: state.sessionType, startedAt: state.startedAt, pieces: state.pieces }),
         );
       } else {
-        window.sessionStorage.removeItem(SESSION_STORAGE_KEY);
+        window.localStorage.removeItem(SESSION_STORAGE_KEY);
       }
+      setPersistFailed(false);
     } catch {
-      // Persistence is best-effort; the in-memory session still works.
+      // The library is meant to outlive the tab now, so a failed write is not
+      // something to swallow: the user would close the browser believing their
+      // work was saved. Warn once rather than on every keystroke.
+      setPersistFailed(true);
+      if (!warnedRef.current) {
+        warnedRef.current = true;
+        showToast("Could not save to this browser — download your keys before closing");
+      }
     }
-  }, [restored, state]);
+  }, [restored, state, showToast]);
 
   const startSession = useCallback((type: SessionType) => {
     setState({ sessionType: type, startedAt: new Date().toISOString(), pieces: [] });
@@ -75,11 +89,12 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       startedAt: state.startedAt,
       pieces: state.pieces,
       pieceCount: state.pieces.length,
+      persistFailed,
       startSession,
       endSession,
       addPiece,
     }),
-    [restored, state, startSession, endSession, addPiece],
+    [restored, state, persistFailed, startSession, endSession, addPiece],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

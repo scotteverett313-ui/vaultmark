@@ -47,6 +47,6 @@ export interface VaultPiece {
   vaultedAt: string;
   key: string;
   // A small JPEG of the vaulted square. Kept tiny on purpose: pieces persist
-  // to sessionStorage, so full-size previews would blow the quota.
+  // to localStorage, so full-size previews would blow the quota.
   thumbnailUrl: string;
 }
