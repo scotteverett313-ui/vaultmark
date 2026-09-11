@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ToastProvider } from "@/components/Toast";
 import { SessionProvider } from "@/components/SessionContext";
+import Link from "next/link";
 import HeaderNav from "@/components/HeaderNav";
 import { ProfileProvider } from "@/components/ProfileContext";
 
@@ -22,7 +23,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ProfileProvider>
             <SessionProvider>
             <header className="sticky top-0 z-50 flex h-[3.25rem] items-center gap-5 border-b border-vm-border bg-vm-panel px-7">
-              <span className="text-base font-bold tracking-[0.2em] text-vm-gold">VAULTMARK</span>
+              <Link
+                href="/"
+                className="text-base font-bold tracking-[0.2em] text-vm-gold transition-opacity hover:opacity-75"
+              >
+                VAULTMARK
+              </Link>
               <span className="hidden text-[9px] tracking-[0.12em] text-vm-dim sm:inline">
                 DIGITAL ART AUTHENTICATION
               </span>

@@ -170,14 +170,27 @@ export default function Settings() {
                 </div>
               </div>
             ) : (
-              <button
-                type="button"
-                onClick={() => setConfirmingEnd(true)}
-                className="self-start border border-vm-border-2 px-3 py-2 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-red hover:text-vm-red"
-              >
-                End session
-              </button>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => router.push("/")}
+                  className="border border-vm-border-2 px-3 py-2 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+                >
+                  Return to start
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmingEnd(true)}
+                  className="border border-vm-border-2 px-3 py-2 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-red hover:text-vm-red"
+                >
+                  End session
+                </button>
+              </div>
             )}
+            <p className="text-[9px] leading-[1.7] text-vm-dim">
+              Return to start keeps everything and offers to resume. End session clears the library — the nearest
+              thing to signing out, since there is no account to sign out of.
+            </p>
           </>
         ) : (
           <p className="text-[10px] text-vm-dim">No session running.</p>
