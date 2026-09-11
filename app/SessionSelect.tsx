@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Landmark, Palette } from "lucide-react";
+import Onboarding, { useOnboarding } from "@/components/Onboarding";
 import { useSession } from "@/components/SessionContext";
 import type { SessionType } from "@/lib/types";
 
@@ -27,8 +28,21 @@ export default function SessionSelect() {
   const router = useRouter();
   const { restored, sessionType, pieceCount, sessionPieceCount, startSession } = useSession();
   const [selected, setSelected] = useState<SessionType | null>(null);
+  const intro = useOnboarding();
 
   const hasActiveSession = restored && sessionType !== null;
+  const ready = restored && intro.restored;
+
+  // Anyone already holding records has been through this. Mark it done rather
+  // than leaving it to appear later if they ever erase the collection.
+  useEffect(() => {
+    if (ready && !intro.completed && pieceCount > 0) intro.complete();
+  }, [ready, intro, pieceCount]);
+
+  // One tick, and it keeps the introduction from flashing over the picker.
+  if (!ready) return <div className="min-h-[calc(100vh-3.25rem)]" />;
+
+  if (!intro.completed && pieceCount === 0) return <Onboarding onDone={intro.complete} />;
 
   function beginSession() {
     if (!selected) return;

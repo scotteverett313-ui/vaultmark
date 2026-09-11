@@ -7,6 +7,7 @@ import { useSession } from "@/components/SessionContext";
 import { useToast } from "@/components/Toast";
 import { mergeArtists } from "@/lib/profile";
 import { parseBackup } from "@/lib/backup";
+import { resetOnboarding } from "@/components/Onboarding";
 
 export default function Settings() {
   const router = useRouter();
@@ -311,6 +312,25 @@ export default function Settings() {
               Erase collection
             </button>
           ))}
+      </Section>
+
+      <Section title="Introduction">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              const cleared = resetOnboarding();
+              showToast(cleared ? "Introduction will show at the start" : "This browser is not storing preferences");
+              if (cleared) router.push("/");
+            }}
+            className="border border-vm-border-2 px-3 py-2 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+          >
+            Replay the introduction
+          </button>
+          <span className="text-[9px] leading-[1.6] text-vm-dim">
+            The four screens explaining how vaulting, keys, and storage work.
+          </span>
+        </div>
       </Section>
 
       <Section title="Correcting a sealed record">
