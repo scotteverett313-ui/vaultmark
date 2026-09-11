@@ -4,18 +4,35 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { useToast } from "@/components/Toast";
 import type { AmendableField, PieceStatus, SessionType, VaultPiece } from "@/lib/types";
 import { amendPiece as applyAmendment } from "@/lib/amend";
-import { SESSION_STORAGE_KEY, parseStoredSession, serializeSession } from "@/lib/session";
+import {
+  EMPTY_VAULT,
+  LEGACY_SESSION_KEY,
+  VAULT_STORAGE_KEY,
+  isEmptyVault,
+  loadVault,
+  mergePieces,
+  piecesThisSession,
+  serializeVault,
+  type StoredVault,
+} from "@/lib/session";
 
 export interface SessionContextValue {
   restored: boolean;
   sessionType: SessionType | null;
   startedAt: string | null;
+  /** The whole collection, which outlives any one session. */
   pieces: VaultPiece[];
   pieceCount: number;
+  /** Of those, the ones sealed during the session running now. */
+  sessionPieceCount: number;
   /** True once a write to storage has failed — the library is memory-only. */
   persistFailed: boolean;
   startSession: (type: SessionType) => void;
   endSession: () => void;
+  /** Destroys the collection. Separate from ending a session on purpose. */
+  clearCollection: () => void;
+  /** Merges records from an exported backup, skipping vault IDs already held. */
+  importPieces: (incoming: VaultPiece[]) => { added: number; skipped: number };
   addPiece: (piece: VaultPiece) => void;
   updatePieceStatus: (id: string, status: PieceStatus) => void;
   /** Corrects one descriptive field on a sealed record, leaving the key alone. */
@@ -24,18 +41,10 @@ export interface SessionContextValue {
 
 export type AmendResult = { ok: true } | { ok: false; error: string };
 
-interface SessionState {
-  sessionType: SessionType | null;
-  startedAt: string | null;
-  pieces: VaultPiece[];
-}
-
-const EMPTY_SESSION: SessionState = { sessionType: null, startedAt: null, pieces: [] };
-
 const SessionContext = createContext<SessionContextValue | null>(null);
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<SessionState>(EMPTY_SESSION);
+  const [state, setState] = useState<StoredVault>(EMPTY_VAULT);
   // Storage can only be read after mount, so screens that gate on an active
   // session need to know whether a restore has happened yet — otherwise a
   // refresh mid-workflow looks identical to no session at all.
@@ -50,8 +59,14 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
-      const stored = parseStoredSession(window.localStorage.getItem(SESSION_STORAGE_KEY));
-      if (stored) setState(stored);
+      const { vault, migrated } = loadVault((key) => window.localStorage.getItem(key));
+      setState(vault);
+      // The pieces are safe under the new key before the old one goes; the
+      // write below runs on the same tick as this state change.
+      if (migrated) {
+        window.localStorage.setItem(VAULT_STORAGE_KEY, serializeVault(vault));
+        window.localStorage.removeItem(LEGACY_SESSION_KEY);
+      }
     } catch {
       // localStorage throws in private or sandboxed contexts; start fresh.
     }
@@ -61,14 +76,10 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!restored) return;
     try {
-      if (state.sessionType && state.startedAt) {
-        window.localStorage.setItem(
-          SESSION_STORAGE_KEY,
-          serializeSession({ sessionType: state.sessionType, startedAt: state.startedAt, pieces: state.pieces }),
-        );
-      } else {
-        window.localStorage.removeItem(SESSION_STORAGE_KEY);
-      }
+      // Written whenever anything is held, session or not: the collection is
+      // what has to survive, and it now outlives every sitting.
+      if (isEmptyVault(state)) window.localStorage.removeItem(VAULT_STORAGE_KEY);
+      else window.localStorage.setItem(VAULT_STORAGE_KEY, serializeVault(state));
       setPersistFailed(false);
     } catch {
       // The library is meant to outlive the tab now, so a failed write is not
@@ -82,11 +93,23 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     }
   }, [restored, state, showToast]);
 
+  // A new sitting, over the same collection. This used to clear the pieces,
+  // which meant a second session silently destroyed the first one's work.
   const startSession = useCallback((type: SessionType) => {
-    setState({ sessionType: type, startedAt: new Date().toISOString(), pieces: [] });
+    setState((prev) => ({ ...prev, sessionType: type, startedAt: new Date().toISOString() }));
   }, []);
 
-  const endSession = useCallback(() => setState(EMPTY_SESSION), []);
+  const endSession = useCallback(() => {
+    setState((prev) => ({ ...prev, sessionType: null, startedAt: null }));
+  }, []);
+
+  const clearCollection = useCallback(() => setState(EMPTY_VAULT), []);
+
+  const importPieces = useCallback((incoming: VaultPiece[]) => {
+    const { pieces, added, skipped } = mergePieces(stateRef.current.pieces, incoming);
+    if (added > 0) setState((prev) => ({ ...prev, pieces }));
+    return { added, skipped };
+  }, []);
 
   const addPiece = useCallback((piece: VaultPiece) => {
     setState((prev) => ({ ...prev, pieces: [...prev.pieces, piece] }));
@@ -122,14 +145,28 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       startedAt: state.startedAt,
       pieces: state.pieces,
       pieceCount: state.pieces.length,
+      sessionPieceCount: piecesThisSession(state.pieces, state.startedAt).length,
       persistFailed,
       startSession,
       endSession,
+      clearCollection,
+      importPieces,
       addPiece,
       updatePieceStatus,
       amendPiece,
     }),
-    [restored, state, persistFailed, startSession, endSession, addPiece, updatePieceStatus, amendPiece],
+    [
+      restored,
+      state,
+      persistFailed,
+      startSession,
+      endSession,
+      clearCollection,
+      importPieces,
+      addPiece,
+      updatePieceStatus,
+      amendPiece,
+    ],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

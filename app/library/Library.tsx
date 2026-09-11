@@ -29,7 +29,8 @@ const COLUMNS: { label: string; field?: SortField }[] = [
 
 export default function Library() {
   const router = useRouter();
-  const { restored, sessionType, startedAt, pieces, persistFailed, updatePieceStatus, amendPiece } = useSession();
+  const { restored, sessionType, startedAt, pieces, sessionPieceCount, persistFailed, updatePieceStatus, amendPiece } =
+    useSession();
   const { showToast } = useToast();
 
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -108,13 +109,14 @@ export default function Library() {
 
   const stamp = new Date().toISOString().slice(0, 10);
 
-  if (restored && !sessionType) {
+  if (restored && pieces.length === 0 && !sessionType) {
     return (
       <Empty
-        title="No active session"
-        body="The library holds the pieces vaulted in a session. Choose a session type to begin one."
+        title="Nothing vaulted yet"
+        body="Your collection lives in this browser and is kept between sessions. Begin a session to vault a piece, or restore a backup from Settings."
         cta="Choose a session →"
         href="/"
+        secondary={{ label: "Restore a backup", href: "/settings" }}
       />
     );
   }
@@ -122,14 +124,18 @@ export default function Library() {
   return (
     <div>
       <dl className="grid grid-cols-2 gap-px border-b border-vm-border bg-vm-border sm:grid-cols-3 lg:grid-cols-5">
-        <Stat label="Total Vaulted" value={String(pieces.length)} sub="This session" />
+        <Stat label="Total Vaulted" value={String(pieces.length)} sub="In this browser" />
         <Stat label="Artists" value={String(artists.length)} sub="In collection" />
         <Stat label="Listed" value={String(pieces.filter((p) => p.status === "Listed").length)} sub="On marketplace" />
         <Stat label="Keys Issued" value={String(pieces.length)} sub="All delivered" />
         <Stat
-          label="Session Date"
-          value={startedAt ? new Date(startedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "—"}
-          sub={sessionType === "gallery" ? "Gallery session" : "Private session"}
+          label="Session"
+          value={startedAt ? new Date(startedAt).toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "None"}
+          sub={
+            sessionType
+              ? `${sessionType === "gallery" ? "Gallery" : "Private"} · ${sessionPieceCount} this session`
+              : "Collection kept"
+          }
           small
         />
       </dl>
@@ -240,9 +246,10 @@ export default function Library() {
       {pieces.length === 0 ? (
         <Empty
           title="No pieces vaulted yet"
-          body="Every artwork you vault in this session appears here, with its certificate and key."
+          body="Every artwork you vault appears here with its certificate and key, and stays between sessions."
           cta="+ Vault first artwork"
           href="/intake/capture"
+          secondary={{ label: "Restore a backup", href: "/settings" }}
         />
       ) : visible.length === 0 ? (
         <div className="p-16 text-center text-[11px] text-vm-dim">Nothing matches those filters.</div>
@@ -300,7 +307,19 @@ function Stat({ label, value, sub, small }: { label: string; value: string; sub:
   );
 }
 
-function Empty({ title, body, cta, href }: { title: string; body: string; cta: string; href: string }) {
+function Empty({
+  title,
+  body,
+  cta,
+  href,
+  secondary,
+}: {
+  title: string;
+  body: string;
+  cta: string;
+  href: string;
+  secondary?: { label: string; href: string };
+}) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 px-6 py-24 text-center">
       <div className="text-4xl text-vm-border-2">⬡</div>
@@ -312,6 +331,14 @@ function Empty({ title, body, cta, href }: { title: string; body: string; cta: s
       >
         {cta}
       </Link>
+      {secondary && (
+        <Link
+          href={secondary.href}
+          className="font-vm-mono text-[9px] uppercase tracking-[0.12em] text-vm-dim underline-offset-4 transition-colors hover:text-vm-gold hover:underline"
+        >
+          {secondary.label}
+        </Link>
+      )}
     </div>
   );
 }

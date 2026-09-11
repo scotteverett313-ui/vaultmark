@@ -25,7 +25,7 @@ const SESSION_OPTIONS = [
 
 export default function SessionSelect() {
   const router = useRouter();
-  const { restored, sessionType, pieceCount, startSession } = useSession();
+  const { restored, sessionType, pieceCount, sessionPieceCount, startSession } = useSession();
   const [selected, setSelected] = useState<SessionType | null>(null);
 
   const hasActiveSession = restored && sessionType !== null;
@@ -52,8 +52,8 @@ export default function SessionSelect() {
           <div className="mb-6 flex flex-wrap items-center gap-3 border border-vm-border-2 bg-vm-surface px-4 py-3">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-vm-green shadow-[0_0_6px_#3A8A5A]" />
             <span className="text-[10px] text-vm-mid">
-              {sessionType === "gallery" ? "Gallery" : "Private"} session in progress · {pieceCount}{" "}
-              {pieceCount === 1 ? "piece" : "pieces"} vaulted
+              {sessionType === "gallery" ? "Gallery" : "Private"} session in progress · {sessionPieceCount}{" "}
+              {sessionPieceCount === 1 ? "piece" : "pieces"} vaulted this session
             </span>
             <button
               type="button"
@@ -104,9 +104,10 @@ export default function SessionSelect() {
           {hasActiveSession ? "Begin New Session →" : "Begin Session →"}
         </button>
 
-        {hasActiveSession && pieceCount > 0 && (
+        {pieceCount > 0 && (
           <p className="mt-2 text-[9px] leading-relaxed text-vm-dim">
-            Starting a new session clears the {pieceCount} {pieceCount === 1 ? "piece" : "pieces"} in the current one.
+            Your collection of {pieceCount} {pieceCount === 1 ? "piece" : "pieces"} is kept. A session only sets the
+            attestation wording and dates the intake — starting one never clears what you have vaulted.
           </p>
         )}
       </div>

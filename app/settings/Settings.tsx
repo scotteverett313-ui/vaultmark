@@ -1,19 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useProfile } from "@/components/ProfileContext";
 import { useSession } from "@/components/SessionContext";
 import { useToast } from "@/components/Toast";
 import { mergeArtists } from "@/lib/profile";
+import { parseBackup } from "@/lib/backup";
 
 export default function Settings() {
   const router = useRouter();
   const { profile, updateProfile } = useProfile();
-  const { sessionType, startedAt, pieces, endSession } = useSession();
+  const { sessionType, startedAt, pieces, sessionPieceCount, endSession, clearCollection, importPieces } = useSession();
   const { showToast } = useToast();
   const [newArtist, setNewArtist] = useState("");
   const [confirmingEnd, setConfirmingEnd] = useState(false);
+  const [confirmingErase, setConfirmingErase] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
+  const importRef = useRef<HTMLInputElement>(null);
+
+  async function restoreBackup(file: File) {
+    setImportError(null);
+    const outcome = parseBackup(await file.text());
+    if (!outcome.ok) {
+      setImportError(outcome.error);
+      return;
+    }
+
+    const { added, skipped } = importPieces(outcome.backup.pieces);
+    const rejected = outcome.backup.rejected;
+    if (added === 0) {
+      setImportError(
+        skipped > 0
+          ? `Already held — all ${skipped} ${skipped === 1 ? "record" : "records"} in that file are in your collection.`
+          : "Nothing in that file could be restored.",
+      );
+      return;
+    }
+    showToast(
+      `Restored ${added} ${added === 1 ? "record" : "records"}` +
+        (skipped > 0 ? ` · ${skipped} already held` : "") +
+        (rejected > 0 ? ` · ${rejected} unreadable` : ""),
+    );
+  }
 
   const roster = mergeArtists(
     profile.artists,
@@ -137,16 +166,16 @@ export default function Settings() {
             <dl className="grid grid-cols-2 gap-px bg-vm-border">
               <Fact label="Type" value={sessionType === "gallery" ? "Gallery / Institution" : "Private Collector / Artist"} />
               <Fact label="Started" value={startedAt ? new Date(startedAt).toLocaleString() : "—"} />
-              <Fact label="Pieces vaulted" value={String(pieces.length)} />
-              <Fact label="Keys issued" value={String(pieces.length)} />
+              <Fact label="Vaulted this session" value={String(sessionPieceCount)} />
+              <Fact label="Collection total" value={String(pieces.length)} />
             </dl>
 
             {confirmingEnd ? (
               <div className="border border-vm-red p-3">
                 <p className="mb-2.5 text-[10px] leading-[1.8] text-vm-mid">
-                  Ending the session clears {pieces.length} {pieces.length === 1 ? "piece" : "pieces"} from this
-                  browser. Keys you have not downloaded cannot be recovered. Export a backup from the library first if
-                  you need one.
+                  Ends this sitting and returns you to the start. Your {pieces.length}{" "}
+                  {pieces.length === 1 ? "piece" : "pieces"} stay in the collection — to remove those, use Erase
+                  collection below.
                 </p>
                 <div className="flex gap-2">
                   <button
@@ -188,13 +217,100 @@ export default function Settings() {
               </div>
             )}
             <p className="text-[9px] leading-[1.7] text-vm-dim">
-              Return to start keeps everything and offers to resume. End session clears the library — the nearest
-              thing to signing out, since there is no account to sign out of.
+              Return to start keeps the session running and offers to resume it. End session closes the sitting — the
+              nearest thing to signing out, since there is no account to sign out of. Neither touches your records.
             </p>
           </>
         ) : (
-          <p className="text-[10px] text-vm-dim">No session running.</p>
+          <div className="flex flex-col gap-2">
+            <p className="text-[10px] leading-[1.8] text-vm-dim">
+              No session running. Your collection of {pieces.length} {pieces.length === 1 ? "piece" : "pieces"} is
+              still here — a session is only needed to vault something new.
+            </p>
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="self-start border border-vm-border-2 px-3 py-2 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+            >
+              Begin a session
+            </button>
+          </div>
         )}
+      </Section>
+
+      <Section
+        title="Collection"
+        note="Records live in this browser and are kept between sessions. A backup is the only way to move them to another browser or device — or to get them back after clearing site data."
+      >
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => importRef.current?.click()}
+            className="border border-vm-gold-2 bg-vm-gold-bg px-3 py-2 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+          >
+            ↑ Restore a backup
+          </button>
+          <input
+            ref={importRef}
+            type="file"
+            accept="application/json,.json"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) void restoreBackup(file);
+              e.target.value = "";
+            }}
+          />
+          <span className="text-[9px] leading-[1.6] text-vm-dim">
+            The .json file from the library&apos;s Backup button. Records you already hold are left as they are.
+          </span>
+        </div>
+
+        {importError && (
+          <p className="text-[9px] leading-[1.7] text-vm-red" role="alert">
+            {importError}
+          </p>
+        )}
+
+        {pieces.length > 0 &&
+          (confirmingErase ? (
+            <div className="border border-vm-red p-3">
+              <p className="mb-2.5 text-[10px] leading-[1.8] text-vm-mid">
+                Erases all {pieces.length} {pieces.length === 1 ? "record" : "records"} from this browser. Keys you
+                have not downloaded cannot be recovered, and Vaultmark holds no copy. Export a backup first if there
+                is any doubt.
+              </p>
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearCollection();
+                    setConfirmingErase(false);
+                    showToast("Collection erased");
+                    router.push("/");
+                  }}
+                  className="border border-vm-red px-3 py-2 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-red transition-colors hover:bg-[rgba(138,58,58,0.2)]"
+                >
+                  Erase {pieces.length} {pieces.length === 1 ? "record" : "records"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setConfirmingErase(false)}
+                  className="border border-vm-border-2 px-3 py-2 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+                >
+                  Keep them
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirmingErase(true)}
+              className="self-start border border-vm-border-2 px-3 py-2 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-red hover:text-vm-red"
+            >
+              Erase collection
+            </button>
+          ))}
       </Section>
 
       <Section title="Correcting a sealed record">
