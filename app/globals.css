@@ -10,6 +10,19 @@
   }
 }
 
+/* The seal delay and the "Sealing vault…" label still convey that something
+   deliberate is happening; only the motion itself is dropped. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @keyframes vm-badge {
   from {
     opacity: 0;
@@ -40,6 +53,14 @@
   ::selection {
     background-color: var(--color-vm-gold);
     color: var(--color-vm-bg);
+  }
+
+  /* Tailwind's reset strips outlines, which left keyboard focus invisible
+     everywhere. :where() keeps specificity at zero so components can still
+     style their own focus. */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 1px solid var(--color-vm-gold);
+    outline-offset: 2px;
   }
 
   ::-webkit-scrollbar {

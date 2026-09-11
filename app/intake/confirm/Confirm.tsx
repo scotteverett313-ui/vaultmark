@@ -165,7 +165,7 @@ function Row({ label, value, gold }: { label: string; value: string; gold?: bool
   return (
     <div className="flex items-baseline justify-between gap-4 border-b border-vm-border py-1.5 last:border-b-0">
       <dt className="flex-shrink-0 text-[9px] text-vm-mid">{label}</dt>
-      <dd className={`break-all text-right text-[10px] ${gold ? "text-vm-gold" : "text-vm-ink"}`}>{value}</dd>
+      <dd className={`text-right text-[10px] ${gold ? "break-all text-vm-gold" : "break-words text-vm-ink"}`}>{value}</dd>
     </div>
   );
 }

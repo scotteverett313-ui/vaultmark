@@ -59,7 +59,7 @@ function CertCell({ label, value, className }: { label: string; value: string; c
   return (
     <div className={`bg-vm-surface px-2.5 py-2 ${className ?? ""}`}>
       <div className="mb-0.5 text-[8px] uppercase tracking-wider text-vm-dim">{label}</div>
-      <div className="break-all text-[10px] leading-[1.6] text-vm-ink">{value}</div>
+      <div className="break-words text-[10px] leading-[1.6] text-vm-ink">{value}</div>
     </div>
   );
 }

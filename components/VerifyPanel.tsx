@@ -214,7 +214,7 @@ function Fact({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-vm-panel px-3 py-2">
       <dt className="mb-0.5 text-[8px] uppercase tracking-[0.1em] text-vm-dim">{label}</dt>
-      <dd className="break-all text-[10px] text-vm-ink">{value}</dd>
+      <dd className="break-words text-[10px] text-vm-ink">{value}</dd>
     </div>
   );
 }
