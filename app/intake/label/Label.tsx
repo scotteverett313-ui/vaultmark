@@ -7,8 +7,10 @@ import LabelForm from "@/components/LabelForm";
 import { useIntake, type LabelDraft } from "@/components/IntakeContext";
 import { useSession } from "@/components/SessionContext";
 import { useProfile } from "@/components/ProfileContext";
+import RecordReadiness from "@/components/RecordReadiness";
 import { mergeArtists } from "@/lib/profile";
 import { certificateNumber } from "@/lib/records";
+import { recordCompleteness } from "@/lib/completeness";
 
 type LabelErrors = Partial<Record<keyof LabelDraft, string>>;
 
@@ -18,7 +20,11 @@ export default function Label() {
   const { captured, vault, label, updateLabel } = useIntake();
   const { profile, restored: profileRestored } = useProfile();
   const [errors, setErrors] = useState<LabelErrors>({});
+  // Flipped by the first Continue press that finds expected fields blank, so
+  // the gaps are seen once before the record can move on.
+  const [warned, setWarned] = useState(false);
   const prefilled = useRef(false);
+  const readinessRef = useRef<HTMLDivElement>(null);
 
   // Fill the gallery fields from the saved profile once, and only into blanks,
   // so a deliberate edit is never overwritten on a return visit to this step.
@@ -45,6 +51,8 @@ export default function Label() {
     );
   }
 
+  const completeness = recordCompleteness(label, sessionType ?? "private");
+
   function proceed() {
     const next: LabelErrors = {};
     if (!label.title.trim()) next.title = "Title is required";
@@ -55,6 +63,16 @@ export default function Label() {
       document.getElementById(Object.keys(next)[0])?.focus();
       return;
     }
+
+    // Expected-but-blank fields do not block a seal, but they are worth one
+    // deliberate look: filling one in now costs nothing, and correcting it
+    // after sealing is a permanent amendment on the certificate.
+    if (completeness.missingRecommended.length > 0 && !warned) {
+      setWarned(true);
+      readinessRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+      return;
+    }
+
     router.push("/intake/confirm");
   }
 
@@ -90,6 +108,10 @@ export default function Label() {
         artistSuggestions={mergeArtists(profile.artists, pieces.map((p) => p.artist))}
       />
 
+      <div ref={readinessRef} className="px-5 pb-5 lg:px-6">
+        <RecordReadiness completeness={completeness} acknowledged={warned} />
+      </div>
+
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-vm-border bg-vm-panel p-4 md:static md:border-t-0 md:bg-transparent md:px-6 md:pb-8 md:pt-0">
         <div className="flex items-center gap-3">
           <Link
@@ -103,12 +125,17 @@ export default function Label() {
             onClick={proceed}
             className="flex-1 border border-vm-gold-2 bg-vm-gold-bg px-4 py-3 font-vm-mono text-[10px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] md:max-w-xs"
           >
-            Review &amp; Confirm →
+            {warned && completeness.missingRecommended.length > 0 ? "Continue anyway →" : "Review & Confirm →"}
           </button>
         </div>
-        {Object.keys(errors).length > 0 && (
+        {Object.keys(errors).length > 0 ? (
           <p className="mt-2 text-[9px] text-vm-red">Title and artist name are required before this record can be sealed.</p>
-        )}
+        ) : warned && completeness.missingRecommended.length > 0 ? (
+          <p className="mt-2 text-[9px] text-vm-amber">
+            {completeness.missingRecommended.length} expected field
+            {completeness.missingRecommended.length === 1 ? " is" : "s are"} still blank — see Record readiness above.
+          </p>
+        ) : null}
       </div>
     </div>
   );

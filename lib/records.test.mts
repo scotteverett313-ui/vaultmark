@@ -191,3 +191,41 @@ test("JSON backup carries the keys and says so", () => {
   assert.equal(parsed.containsKeyCredentials, true);
   assert.equal(parsed.pieces[0].key, vault.encodedKey);
 });
+
+test("amendments appear on the certificate with both values and the reason", () => {
+  const piece = buildVaultPiece({ label: draft(), vault, captured, pieceCount: 0, thumbnailUrl: "data:," });
+  assert.deepEqual(piece.amendments, [], "a freshly sealed record has no history");
+
+  const plain = buildCertificateText(piece);
+  assert.ok(!plain.includes("AMENDMENTS"), "an unamended certificate says nothing about amendments");
+
+  const amended = buildCertificateText({
+    ...piece,
+    title: "Threshold (Diptych, Right)",
+    amendments: [
+      {
+        at: "2026-02-02T00:00:00.000Z",
+        field: "title",
+        from: "Threshold (Diptych, Left)",
+        to: "Threshold (Diptych, Right)",
+        reason: "Panels transposed at intake.",
+      },
+    ],
+  });
+  assert.ok(amended.includes("AMENDMENTS"));
+  assert.ok(amended.includes("Threshold (Diptych, Left)"), "the superseded value stays on the certificate");
+  assert.ok(amended.includes("Panels transposed at intake."));
+  assert.ok(amended.includes("unchanged since sealing"));
+});
+
+test("the CSV carries an amendment count so a spreadsheet can spot corrected records", () => {
+  const piece = buildVaultPiece({ label: draft(), vault, captured, pieceCount: 0, thumbnailUrl: "data:," });
+  const csv = buildCollectionCsv([
+    piece,
+    { ...piece, id: "VMRK-OTHER", amendments: [{ at: "x", field: "notes", from: "a", to: "b", reason: "why" }] },
+  ]);
+  const [header, first, second] = csv.split("\n");
+  assert.ok(header.endsWith("Amendments"));
+  assert.ok(first.endsWith(",0"));
+  assert.ok(second.endsWith(",1"));
+});

@@ -2,7 +2,8 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "@/components/Toast";
-import type { PieceStatus, SessionType, VaultPiece } from "@/lib/types";
+import type { AmendableField, PieceStatus, SessionType, VaultPiece } from "@/lib/types";
+import { amendPiece as applyAmendment } from "@/lib/amend";
 import { SESSION_STORAGE_KEY, parseStoredSession, serializeSession } from "@/lib/session";
 
 export interface SessionContextValue {
@@ -17,7 +18,11 @@ export interface SessionContextValue {
   endSession: () => void;
   addPiece: (piece: VaultPiece) => void;
   updatePieceStatus: (id: string, status: PieceStatus) => void;
+  /** Corrects one descriptive field on a sealed record, leaving the key alone. */
+  amendPiece: (id: string, field: AmendableField, to: string, reason: string) => AmendResult;
 }
+
+export type AmendResult = { ok: true } | { ok: false; error: string };
 
 interface SessionState {
   sessionType: SessionType | null;
@@ -38,6 +43,10 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [persistFailed, setPersistFailed] = useState(false);
   const { showToast } = useToast();
   const warnedRef = useRef(false);
+  // Read inside amendPiece so the callback stays stable while still seeing
+  // the current pieces — validation needs the record as it stands now.
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   useEffect(() => {
     try {
@@ -90,6 +99,22 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     }));
   }, []);
 
+  // Validation lives in lib/amend so it can be tested without React; this
+  // only decides whether the result is worth writing back to storage.
+  const amendPiece = useCallback((id: string, field: AmendableField, to: string, reason: string): AmendResult => {
+    const target = stateRef.current.pieces.find((piece) => piece.id === id);
+    if (!target) return { ok: false, error: "That record is no longer in this session." };
+
+    const outcome = applyAmendment(target, { field, to, reason });
+    if (!outcome.ok) return { ok: false, error: outcome.error };
+
+    setState((prev) => ({
+      ...prev,
+      pieces: prev.pieces.map((piece) => (piece.id === id ? outcome.piece : piece)),
+    }));
+    return { ok: true };
+  }, []);
+
   const value = useMemo<SessionContextValue>(
     () => ({
       restored,
@@ -102,8 +127,9 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
       endSession,
       addPiece,
       updatePieceStatus,
+      amendPiece,
     }),
-    [restored, state, persistFailed, startSession, endSession, addPiece, updatePieceStatus],
+    [restored, state, persistFailed, startSession, endSession, addPiece, updatePieceStatus, amendPiece],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

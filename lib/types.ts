@@ -21,6 +21,34 @@ export interface VaultKeyCredential {
   issuedAt: string;
 }
 
+// Fields of a sealed record that may be corrected after the fact. The
+// authentication facts — vault ID, fingerprint, pixel hash, QR symbol,
+// masked count, issue time, key — are deliberately absent: correcting a
+// description is bookkeeping, changing what was hashed is forgery.
+export type AmendableField =
+  | "title"
+  | "artist"
+  | "year"
+  | "medium"
+  | "dimensions"
+  | "edition"
+  | "value"
+  | "appraiser"
+  | "provenance"
+  | "notes"
+  | "gallery"
+  | "signatory";
+
+// One correction, kept forever. The record shows the current value; the
+// history shows every value it has ever held and why it changed.
+export interface Amendment {
+  at: string;
+  field: AmendableField;
+  from: string;
+  to: string;
+  reason: string;
+}
+
 export interface VaultPiece {
   id: string;
   certificateNumber: string;
@@ -46,6 +74,10 @@ export interface VaultPiece {
   captureSource: "upload" | "camera";
   vaultedAt: string;
   key: string;
+  // Append-only corrections made after sealing. Never empty-checked away:
+  // an absent history and an empty one mean the same thing, but the array
+  // keeps the record's shape stable across builds.
+  amendments: Amendment[];
   // A small JPEG of the vaulted square. Kept tiny on purpose: pieces persist
   // to localStorage, so full-size previews would blow the quota.
   thumbnailUrl: string;

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useIntake } from "@/components/IntakeContext";
 import { useSession } from "@/components/SessionContext";
 import { buildVaultPiece, certificateNumber, formatDimensions, formatEdition } from "@/lib/records";
+import { recordCompleteness } from "@/lib/completeness";
 
 const THUMBNAIL_SIZE = 120;
 
@@ -57,6 +58,7 @@ export default function Confirm() {
     setTimeout(() => router.push("/intake/issued"), 900);
   }
 
+  const completeness = recordCompleteness(label, sessionType ?? "private");
   const isGallery = sessionType === "gallery";
   const attestation = isGallery
     ? `I, ${label.signatory.trim() || "[signatory]"}, on behalf of ${label.gallery.trim() || "[gallery]"}, attest that the work described above is the authentic original, that we are authorized to vault it on behalf of the named artist, and that all information provided is accurate and complete to the best of our knowledge. I understand this record is cryptographically sealed.`
@@ -64,6 +66,27 @@ export default function Confirm() {
 
   return (
     <div className="pb-40 md:pb-0">
+      {completeness.missing.length > 0 && (
+        <div className="border-b border-vm-amber bg-vm-surface px-5 py-3 lg:px-6" role="status">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <span className="font-vm-sans text-[11px] font-bold text-vm-amber">
+              Sealing with {completeness.missing.length} field
+              {completeness.missing.length === 1 ? "" : "s"} blank
+            </span>
+            <Link
+              href="/intake/label"
+              className="border border-vm-border-2 px-2.5 py-1 font-vm-mono text-[9px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+            >
+              ← Complete the label
+            </Link>
+          </div>
+          <p className="mt-1.5 text-[9px] leading-[1.7] text-vm-mid">
+            {completeness.missing.map((f) => f.label).join(" · ")} will read “—” on the certificate. After sealing they
+            can only be corrected by an amendment, which is dated and stays on the record.
+          </p>
+        </div>
+      )}
+
       <div className="grid gap-5 p-5 lg:grid-cols-2 lg:p-6">
         <Block title="Artwork Details">
           <Row label="Title" value={label.title} />

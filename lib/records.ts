@@ -1,5 +1,6 @@
 import type { CapturedImage, LabelDraft, VaultDraft } from "@/components/IntakeContext";
 import type { VaultPiece } from "./types";
+import { amendmentHistory, fieldLabel, formatAmendmentDate } from "./amend.ts";
 
 // Single source for edition wording: the select and the sealed record must
 // never disagree about what "ap" is called.
@@ -48,6 +49,7 @@ const CSV_COLUMNS: [string, (p: VaultPiece) => string][] = [
   ["Pixel Hash", (p) => p.pixelHash],
   ["Capture Source", (p) => p.captureSource],
   ["Vaulted At", (p) => p.vaultedAt],
+  ["Amendments", (p) => String(amendmentHistory(p).length)],
 ];
 
 function csvCell(value: string): string {
@@ -122,6 +124,26 @@ export function buildCertificateText(piece: VaultPiece): string {
     lines.push("", "GALLERY", rule, `Gallery           ${piece.gallery}`, `Signatory         ${piece.signatory}`);
   }
 
+  // Corrections travel with the certificate. A record that has been amended
+  // and one that never needed it must not look identical on paper.
+  const amendments = amendmentHistory(piece);
+  if (amendments.length > 0) {
+    lines.push("", "AMENDMENTS", rule);
+    amendments.forEach((amendment, i) => {
+      lines.push(
+        `${String(i + 1).padStart(2, "0")}. ${formatAmendmentDate(amendment.at)} — ${fieldLabel(amendment.field)}`,
+        `    Was   ${amendment.from}`,
+        `    Now   ${amendment.to}`,
+        `    Why   ${amendment.reason}`,
+      );
+    });
+    lines.push(
+      "",
+      "Amendments correct the description only. The vault ID, fingerprint,",
+      "pixel hash, and key credential above are unchanged since sealing.",
+    );
+  }
+
   lines.push(
     "",
     rule,
@@ -175,6 +197,7 @@ export function buildVaultPiece({
     captureSource: captured.source,
     vaultedAt: vault.key.issuedAt,
     key: vault.encodedKey,
+    amendments: [],
     thumbnailUrl,
   };
 }

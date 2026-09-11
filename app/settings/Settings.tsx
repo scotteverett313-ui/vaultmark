@@ -197,6 +197,19 @@ export default function Settings() {
         )}
       </Section>
 
+      <Section title="Correcting a sealed record">
+        <p className="text-[10px] leading-[1.9] text-vm-mid">
+          A sealed record is never rewritten in place. Open a piece in the library and choose{" "}
+          <span className="text-vm-ink">Amend record</span> to correct a description: the field takes the new value, and
+          the old value, the date, and your stated reason are kept on the record and printed on the certificate.
+        </p>
+        <p className="text-[10px] leading-[1.9] text-vm-mid">
+          The key is never reissued. Vault ID, image fingerprint, pixel hash, QR symbol, and capture source were
+          computed over the artwork itself and cannot be amended — a corrected record still verifies against exactly the
+          image it was sealed for. That is why the label step pushes for a complete record before the seal.
+        </p>
+      </Section>
+
       <Section title="Not built yet">
         <p className="text-[10px] leading-[1.9] text-vm-mid">
           Account tiers, email notifications, and session history all assume accounts and a server, which this build

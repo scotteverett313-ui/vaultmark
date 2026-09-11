@@ -29,7 +29,7 @@ const COLUMNS: { label: string; field?: SortField }[] = [
 
 export default function Library() {
   const router = useRouter();
-  const { restored, sessionType, startedAt, pieces, persistFailed, updatePieceStatus } = useSession();
+  const { restored, sessionType, startedAt, pieces, persistFailed, updatePieceStatus, amendPiece } = useSession();
   const { showToast } = useToast();
 
   const [view, setView] = useState<"grid" | "list">("grid");
@@ -284,6 +284,7 @@ export default function Library() {
         onStatusChange={updatePieceStatus}
         onDownloadKey={downloadKey}
         onDownloadCertificate={downloadCertificate}
+        onAmend={amendPiece}
       />
     </div>
   );

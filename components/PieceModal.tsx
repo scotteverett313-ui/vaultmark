@@ -1,11 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import AmendPanel from "@/components/AmendPanel";
 import PieceThumb from "@/components/PieceThumb";
 import StatusPill from "@/components/StatusPill";
 import { useToast } from "@/components/Toast";
 import { verifyKeyAgainstPiece, type KeyMatchResult } from "@/lib/verify";
-import type { PieceStatus, VaultPiece } from "@/lib/types";
+import { amendmentHistory, amendmentsForField, fieldLabel, formatAmendmentDate } from "@/lib/amend";
+import type { AmendResult } from "@/components/SessionContext";
+import type { AmendableField, PieceStatus, VaultPiece } from "@/lib/types";
 
 const STATUSES: PieceStatus[] = ["Vaulted", "Listed", "Sold", "On Loan"];
 
@@ -15,6 +18,7 @@ interface PieceModalProps {
   onStatusChange: (id: string, status: PieceStatus) => void;
   onDownloadKey: (piece: VaultPiece) => void;
   onDownloadCertificate: (piece: VaultPiece) => void;
+  onAmend: (id: string, field: AmendableField, to: string, reason: string) => AmendResult;
 }
 
 export default function PieceModal({
@@ -23,6 +27,7 @@ export default function PieceModal({
   onStatusChange,
   onDownloadKey,
   onDownloadCertificate,
+  onAmend,
 }: PieceModalProps) {
   const ref = useRef<HTMLDialogElement>(null);
   const { showToast } = useToast();
@@ -44,6 +49,8 @@ export default function PieceModal({
   }, [piece?.id]);
 
   if (!piece) return <dialog ref={ref} className="hidden" />;
+
+  const history = amendmentHistory(piece);
 
   return (
     <dialog
@@ -132,6 +139,8 @@ export default function PieceModal({
                 <ActionButton onClick={() => onDownloadCertificate(piece)}>↓ Certificate</ActionButton>
               </div>
 
+              <AmendPanel piece={piece} onAmend={onAmend} />
+
               <div className="border border-vm-border bg-vm-bg p-3">
                 <div className="mb-1.5 text-[9px] uppercase tracking-[0.08em] text-vm-dim">Verify a key</div>
                 <p className="mb-2 text-[8px] leading-[1.7] text-vm-dim">
@@ -179,12 +188,12 @@ export default function PieceModal({
 
             <div className="max-h-none overflow-y-auto p-4 md:max-h-[70vh]">
               <Section title="Artwork" />
-              <Row label="Title" value={piece.title} />
-              <Row label="Artist" value={piece.artist} />
-              <Row label="Year" value={piece.year} />
-              <Row label="Medium" value={piece.medium} />
-              <Row label="Dimensions" value={piece.dimensions} />
-              <Row label="Edition" value={piece.edition} />
+              <Row label="Title" value={piece.title} amended={amendmentsForField(piece, "title").length > 0} />
+              <Row label="Artist" value={piece.artist} amended={amendmentsForField(piece, "artist").length > 0} />
+              <Row label="Year" value={piece.year} amended={amendmentsForField(piece, "year").length > 0} />
+              <Row label="Medium" value={piece.medium} amended={amendmentsForField(piece, "medium").length > 0} />
+              <Row label="Dimensions" value={piece.dimensions} amended={amendmentsForField(piece, "dimensions").length > 0} />
+              <Row label="Edition" value={piece.edition} amended={amendmentsForField(piece, "edition").length > 0} />
 
               <Section title="Vault Record" />
               <Row label="Vault ID" value={piece.id} gold />
@@ -197,16 +206,47 @@ export default function PieceModal({
               <Row label="Vaulted At" value={piece.vaultedAt} />
 
               <Section title="Provenance" />
-              <Row label="Provenance" value={piece.provenance} />
-              <Row label="Appraised Value" value={piece.value} />
-              <Row label="Appraiser" value={piece.appraiser} />
-              <Row label="Notes" value={piece.notes} />
+              <Row label="Provenance" value={piece.provenance} amended={amendmentsForField(piece, "provenance").length > 0} />
+              <Row label="Appraised Value" value={piece.value} amended={amendmentsForField(piece, "value").length > 0} />
+              <Row label="Appraiser" value={piece.appraiser} amended={amendmentsForField(piece, "appraiser").length > 0} />
+              <Row label="Notes" value={piece.notes} amended={amendmentsForField(piece, "notes").length > 0} />
+
+              {history.length > 0 && (
+                <>
+                  <Section title={`Amendments · ${history.length}`} />
+                  <p className="mb-2.5 text-[9px] leading-[1.7] text-vm-dim">
+                    Corrections made after sealing. The key, fingerprint, and pixel hash above are unchanged — this
+                    record still verifies against the same image.
+                  </p>
+                  <ol className="flex flex-col gap-px bg-vm-border">
+                    {history.map((amendment, i) => (
+                      <li key={`${amendment.at}-${i}`} className="bg-vm-panel px-3 py-2">
+                        <div className="flex flex-wrap items-baseline justify-between gap-2">
+                          <span className="text-[10px] text-vm-ink">{fieldLabel(amendment.field)}</span>
+                          <span className="font-vm-mono text-[8px] tracking-[0.08em] text-vm-dim">
+                            {formatAmendmentDate(amendment.at)}
+                          </span>
+                        </div>
+                        <div className="mt-1 text-[9px] leading-[1.7] text-vm-mid">
+                          <span className="text-vm-dim">Was </span>
+                          <span className="break-words line-through">{amendment.from}</span>
+                        </div>
+                        <div className="text-[9px] leading-[1.7] text-vm-mid">
+                          <span className="text-vm-dim">Now </span>
+                          <span className="break-words text-vm-ink">{amendment.to}</span>
+                        </div>
+                        <p className="mt-1 break-words text-[9px] leading-[1.6] text-vm-dim">{amendment.reason}</p>
+                      </li>
+                    ))}
+                  </ol>
+                </>
+              )}
 
               {(piece.gallery !== "—" || piece.signatory !== "—") && (
                 <>
                   <Section title="Gallery" />
-                  <Row label="Gallery" value={piece.gallery} />
-                  <Row label="Signatory" value={piece.signatory} />
+                  <Row label="Gallery" value={piece.gallery} amended={amendmentsForField(piece, "gallery").length > 0} />
+                  <Row label="Signatory" value={piece.signatory} amended={amendmentsForField(piece, "signatory").length > 0} />
                 </>
               )}
             </div>
@@ -247,10 +287,17 @@ function Section({ title }: { title: string }) {
   );
 }
 
-function Row({ label, value, gold }: { label: string; value: string; gold?: boolean }) {
+function Row({ label, value, gold, amended }: { label: string; value: string; gold?: boolean; amended?: boolean }) {
   return (
     <div className="flex items-baseline justify-between gap-4 border-b border-vm-border py-1.5 last:border-b-0">
-      <span className="flex-shrink-0 text-[9px] text-vm-mid">{label}</span>
+      <span className="flex-shrink-0 text-[9px] text-vm-mid">
+        {label}
+        {amended && (
+          <span className="ml-1 text-vm-amber" title="Amended after sealing — see Amendments below">
+            ✎
+          </span>
+        )}
+      </span>
       <span className={`text-right text-[10px] ${gold ? "break-all text-vm-gold" : "break-words text-vm-ink"}`}>{value}</span>
     </div>
   );

@@ -1,3 +1,4 @@
+import { amendmentHistory, fieldLabel, formatAmendmentDate } from "@/lib/amend";
 import type { VaultPiece } from "@/lib/types";
 
 export default function CertificateCard({ piece }: { piece: VaultPiece }) {
@@ -5,6 +6,8 @@ export default function CertificateCard({ piece }: { piece: VaultPiece }) {
   const issuedLabel = Number.isNaN(issued.getTime())
     ? piece.vaultedAt
     : issued.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+
+  const amendments = amendmentHistory(piece);
 
   return (
     <div className="w-full border border-vm-border bg-vm-surface p-5 font-vm-mono">
@@ -46,6 +49,24 @@ export default function CertificateCard({ piece }: { piece: VaultPiece }) {
         <CertCell className="col-span-2" label="Image Fingerprint" value={piece.imageFingerprint} />
         <CertCell className="col-span-2" label="Pixel Hash" value={piece.pixelHash} />
       </div>
+
+      {amendments.length > 0 && (
+        <div className="mt-3.5 border-t border-vm-border pt-2.5">
+          <div className="mb-1.5 text-[8px] uppercase tracking-wider text-vm-dim">
+            Amendments · {amendments.length}
+          </div>
+          <ol className="flex flex-col gap-1">
+            {amendments.map((amendment, i) => (
+              <li key={`${amendment.at}-${i}`} className="text-[8px] leading-[1.7] text-vm-mid">
+                <span className="text-vm-dim">{formatAmendmentDate(amendment.at)} · </span>
+                <span className="text-vm-ink">{fieldLabel(amendment.field)}</span>
+                <span className="text-vm-dim"> — was </span>
+                <span className="break-words">{amendment.from}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
 
       <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 border-t border-vm-border pt-2.5 text-[8px] tracking-[0.08em] text-vm-dim">
         <span>{piece.gallery !== "—" ? piece.gallery : "Independent"}</span>

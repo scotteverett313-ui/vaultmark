@@ -28,6 +28,7 @@ function makePiece(overrides: Partial<VaultPiece> = {}): VaultPiece {
     gallery: "Meridian Gallery",
     signatory: "M. Chen, Director",
     thumbnailUrl: "data:image/jpeg;base64,x",
+    amendments: [],
     ...overrides,
   };
 }
@@ -68,4 +69,30 @@ test("parseStoredSession drops malformed pieces but keeps the session", () => {
     parsed.pieces.map((p) => p.id),
     ["VMRK-TEST01", "VMRK-TEST02"],
   );
+});
+
+test("a piece stored before amendments existed is restored with an empty history", () => {
+  const legacy = makePiece() as Partial<VaultPiece>;
+  delete legacy.amendments;
+  const raw = JSON.stringify({ ...session, pieces: [legacy] });
+
+  const parsed = parseStoredSession(raw);
+  assert.deepEqual(parsed?.pieces[0].amendments, []);
+});
+
+test("amendment history survives a round-trip and drops entries that are not amendments", () => {
+  const amended = makePiece({
+    title: "Untitled No. 8",
+    amendments: [
+      { at: "2026-02-02T00:00:00.000Z", field: "title", from: "Untitled No. 7", to: "Untitled No. 8", reason: "Typo." },
+    ],
+  });
+  const roundTripped = parseStoredSession(serializeSession({ ...session, pieces: [amended] }));
+  assert.deepEqual(roundTripped?.pieces[0].amendments, amended.amendments);
+
+  const junk = JSON.stringify({
+    ...session,
+    pieces: [{ ...amended, amendments: [{ at: "2026-02-02T00:00:00.000Z", field: "pixelHash", from: "a", to: "b", reason: "no" }] }],
+  });
+  assert.deepEqual(parseStoredSession(junk)?.pieces[0].amendments, []);
 });
