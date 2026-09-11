@@ -8,6 +8,12 @@ export const ONBOARDING_VERSION = 1;
 
 export interface OnboardingState {
   completedVersion: number;
+  /**
+   * Set by the Replay button in Settings. A never-seen marker and a replay
+   * request would otherwise be indistinguishable, and the rule that spares
+   * existing users the introduction would swallow the request.
+   */
+  replayRequested?: boolean;
 }
 
 export interface OnboardingStep {
@@ -80,13 +86,21 @@ export function parseStoredOnboarding(raw: string | null): OnboardingState | nul
   }
   if (typeof parsed !== "object" || parsed === null) return null;
 
-  const { completedVersion } = parsed as Partial<OnboardingState>;
+  const { completedVersion, replayRequested } = parsed as Partial<OnboardingState>;
   if (typeof completedVersion !== "number" || !Number.isFinite(completedVersion)) return null;
 
-  return { completedVersion };
+  return { completedVersion, replayRequested: replayRequested === true };
 }
 
 export function hasCompletedOnboarding(raw: string | null, version = ONBOARDING_VERSION): boolean {
   const state = parseStoredOnboarding(raw);
   return state !== null && state.completedVersion >= version;
 }
+
+/** Someone asked for the introduction back, however much they have vaulted. */
+export function isReplayRequested(raw: string | null): boolean {
+  return parseStoredOnboarding(raw)?.replayRequested === true;
+}
+
+/** What Settings stores to put the introduction back on the next visit. */
+export const REPLAY_REQUEST: OnboardingState = { completedVersion: 0, replayRequested: true };

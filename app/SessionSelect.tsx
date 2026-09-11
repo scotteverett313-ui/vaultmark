@@ -34,15 +34,18 @@ export default function SessionSelect() {
   const ready = restored && intro.restored;
 
   // Anyone already holding records has been through this. Mark it done rather
-  // than leaving it to appear later if they ever erase the collection.
+  // than leaving it to appear later if they ever erase the collection — unless
+  // they asked for it back from Settings, which has to win.
   useEffect(() => {
-    if (ready && !intro.completed && pieceCount > 0) intro.complete();
+    if (ready && !intro.completed && !intro.replayRequested && pieceCount > 0) intro.complete();
   }, [ready, intro, pieceCount]);
 
   // One tick, and it keeps the introduction from flashing over the picker.
   if (!ready) return <div className="min-h-[calc(100vh-3.25rem)]" />;
 
-  if (!intro.completed && pieceCount === 0) return <Onboarding onDone={intro.complete} />;
+  if (!intro.completed && (intro.replayRequested || pieceCount === 0)) {
+    return <Onboarding onDone={intro.complete} />;
+  }
 
   function beginSession() {
     if (!selected) return;

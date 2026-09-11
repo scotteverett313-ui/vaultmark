@@ -3,15 +3,36 @@ import assert from "node:assert/strict";
 import {
   ONBOARDING_STEPS,
   ONBOARDING_VERSION,
+  REPLAY_REQUEST,
   hasCompletedOnboarding,
+  isReplayRequested,
   parseStoredOnboarding,
   serializeOnboarding,
 } from "./onboarding.ts";
 
 test("a completed marker round-trips and counts as seen", () => {
   const raw = serializeOnboarding({ completedVersion: ONBOARDING_VERSION });
-  assert.deepEqual(parseStoredOnboarding(raw), { completedVersion: ONBOARDING_VERSION });
+  assert.deepEqual(parseStoredOnboarding(raw), { completedVersion: ONBOARDING_VERSION, replayRequested: false });
   assert.ok(hasCompletedOnboarding(raw));
+  assert.ok(!isReplayRequested(raw));
+});
+
+// Settings clearing the marker outright made Replay do nothing for anyone
+// holding records: a cleared marker is a first visit, and a first visit by
+// someone with a collection is skipped on purpose.
+test("a replay request is distinguishable from never having seen it", () => {
+  const requested = serializeOnboarding(REPLAY_REQUEST);
+  assert.ok(isReplayRequested(requested), "the request must be readable back");
+  assert.ok(!hasCompletedOnboarding(requested), "and it must not count as seen");
+
+  assert.ok(!isReplayRequested(null), "a first visit is not a replay request");
+  assert.ok(!isReplayRequested(serializeOnboarding({ completedVersion: ONBOARDING_VERSION })));
+});
+
+test("finishing the introduction clears a replay request", () => {
+  const done = serializeOnboarding({ completedVersion: ONBOARDING_VERSION });
+  assert.ok(hasCompletedOnboarding(done));
+  assert.ok(!isReplayRequested(done));
 });
 
 // Anything unreadable must show the introduction rather than hide it: a first

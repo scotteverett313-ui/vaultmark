@@ -6,7 +6,9 @@ import {
   ONBOARDING_STEPS,
   ONBOARDING_STORAGE_KEY,
   ONBOARDING_VERSION,
+  REPLAY_REQUEST,
   hasCompletedOnboarding,
+  isReplayRequested,
   serializeOnboarding,
 } from "@/lib/onboarding";
 
@@ -107,6 +109,8 @@ export interface OnboardingControls {
   /** Storage has been read; nothing should render on this decision before it. */
   restored: boolean;
   completed: boolean;
+  /** True when Settings asked for the introduction back. */
+  replayRequested: boolean;
   complete: () => void;
 }
 
@@ -115,10 +119,13 @@ export function useOnboarding(): OnboardingControls {
   // Assume seen until storage says otherwise, so the introduction never
   // flashes in front of a returning user between mount and restore.
   const [completed, setCompleted] = useState(true);
+  const [replayRequested, setReplayRequested] = useState(false);
 
   useEffect(() => {
     try {
-      setCompleted(hasCompletedOnboarding(window.localStorage.getItem(ONBOARDING_STORAGE_KEY)));
+      const raw = window.localStorage.getItem(ONBOARDING_STORAGE_KEY);
+      setCompleted(hasCompletedOnboarding(raw));
+      setReplayRequested(isReplayRequested(raw));
     } catch {
       // Storage is blocked, so finishing could never be recorded either — and
       // an introduction that reappears on every load is worse than none.
@@ -129,6 +136,7 @@ export function useOnboarding(): OnboardingControls {
 
   const complete = useCallback(() => {
     setCompleted(true);
+    setReplayRequested(false);
     try {
       window.localStorage.setItem(
         ONBOARDING_STORAGE_KEY,
@@ -139,13 +147,17 @@ export function useOnboarding(): OnboardingControls {
     }
   }, []);
 
-  return { restored, completed, complete };
+  return { restored, completed, replayRequested, complete };
 }
 
-/** Puts the introduction back, for the button in Settings. */
+/**
+ * Puts the introduction back, for the button in Settings. Records the request
+ * rather than clearing the marker: a cleared marker looks exactly like a first
+ * visit, and a first visit by someone holding records is skipped on purpose.
+ */
 export function resetOnboarding(): boolean {
   try {
-    window.localStorage.removeItem(ONBOARDING_STORAGE_KEY);
+    window.localStorage.setItem(ONBOARDING_STORAGE_KEY, serializeOnboarding(REPLAY_REQUEST));
     return true;
   } catch {
     return false;
