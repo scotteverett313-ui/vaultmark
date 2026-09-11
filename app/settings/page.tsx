@@ -1,13 +1,10 @@
-import ScaffoldScreen from "@/components/internal/ScaffoldScreen";
+import type { Metadata } from "next";
+import Settings from "./Settings";
+
+export const metadata: Metadata = {
+  title: "Settings",
+};
 
 export default function SettingsPage() {
-  return (
-    <ScaffoldScreen
-      screenNumber="10"
-      screenName="Settings"
-      route="/settings"
-      buildStep="Step 14 — Settings screen"
-      description="Account tier, gallery profile, artist roster, session history, and notification preferences."
-    />
-  );
+  return <Settings />;
 }

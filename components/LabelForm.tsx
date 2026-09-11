@@ -34,9 +34,17 @@ export interface LabelFormProps {
   sessionType: SessionType;
   vaultRecord: VaultRecordRow[];
   errors: Partial<Record<keyof LabelDraft, string>>;
+  artistSuggestions?: string[];
 }
 
-export default function LabelForm({ value, onChange, sessionType, vaultRecord, errors }: LabelFormProps) {
+export default function LabelForm({
+  value,
+  onChange,
+  sessionType,
+  vaultRecord,
+  errors,
+  artistSuggestions = [],
+}: LabelFormProps) {
   const { showToast } = useToast();
 
   function copy(text: string, what: string) {
@@ -62,11 +70,19 @@ export default function LabelForm({ value, onChange, sessionType, vaultRecord, e
         id="artist"
         label="Artist Name"
         required
+        list={artistSuggestions.length ? "vm-artists" : undefined}
         error={errors.artist}
         value={value.artist}
         onChange={(v) => onChange({ artist: v })}
         placeholder="Full legal name"
       />
+      {artistSuggestions.length > 0 && (
+        <datalist id="vm-artists">
+          {artistSuggestions.map((a) => (
+            <option key={a} value={a} />
+          ))}
+        </datalist>
+      )}
       <Field
         id="year"
         label="Year Created"

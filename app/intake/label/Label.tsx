@@ -1,20 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import LabelForm from "@/components/LabelForm";
 import { useIntake, type LabelDraft } from "@/components/IntakeContext";
 import { useSession } from "@/components/SessionContext";
+import { useProfile } from "@/components/ProfileContext";
+import { mergeArtists } from "@/lib/profile";
 import { certificateNumber } from "@/lib/records";
 
 type LabelErrors = Partial<Record<keyof LabelDraft, string>>;
 
 export default function Label() {
   const router = useRouter();
-  const { restored, sessionType, pieceCount } = useSession();
+  const { restored, sessionType, pieceCount, pieces } = useSession();
   const { captured, vault, label, updateLabel } = useIntake();
+  const { profile, restored: profileRestored } = useProfile();
   const [errors, setErrors] = useState<LabelErrors>({});
+  const prefilled = useRef(false);
+
+  // Fill the gallery fields from the saved profile once, and only into blanks,
+  // so a deliberate edit is never overwritten on a return visit to this step.
+  useEffect(() => {
+    if (!profileRestored || prefilled.current || sessionType !== "gallery") return;
+    prefilled.current = true;
+    const patch: Partial<typeof label> = {};
+    if (!label.gallery && profile.galleryName) patch.gallery = profile.galleryName;
+    if (!label.signatory && profile.signatory) patch.signatory = profile.signatory;
+    if (Object.keys(patch).length) updateLabel(patch);
+  }, [profileRestored, sessionType, profile, label, updateLabel]);
 
   if (restored && !sessionType) {
     return <Gate href="/" cta="Choose a session →" title="No active session" body="Intake needs a session type before a record can be written." />;
@@ -72,6 +87,7 @@ export default function Label() {
         sessionType={sessionType ?? "private"}
         vaultRecord={vaultRecord}
         errors={errors}
+        artistSuggestions={mergeArtists(profile.artists, pieces.map((p) => p.artist))}
       />
 
       <div className="fixed inset-x-0 bottom-0 z-40 border-t border-vm-border bg-vm-panel p-4 md:static md:border-t-0 md:bg-transparent md:px-6 md:pb-8 md:pt-0">
