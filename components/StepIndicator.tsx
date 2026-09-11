@@ -12,7 +12,7 @@ export default function StepIndicator({ steps, currentStep }: StepIndicatorProps
           <div key={label} className="flex flex-shrink-0 items-center">
             <div className="flex items-center gap-2 pr-3.5">
               <div
-                className={`flex h-[18px] w-[18px] flex-shrink-0 items-center justify-center border text-[9px] transition-colors ${
+                className={`flex h-[18px] w-[18px] flex-shrink-0 items-center justify-center border text-[11px] transition-colors ${
                   state === "active"
                     ? "border-vm-gold bg-vm-gold-bg text-vm-gold"
                     : state === "done"
@@ -23,7 +23,7 @@ export default function StepIndicator({ steps, currentStep }: StepIndicatorProps
                 {state === "done" ? "✓" : i + 1}
               </div>
               <span
-                className={`whitespace-nowrap text-[9px] tracking-wider ${
+                className={`whitespace-nowrap text-[11px] tracking-wider ${
                   state === "active" ? "text-vm-gold" : state === "done" ? "text-vm-green" : "text-vm-dim"
                 }`}
               >

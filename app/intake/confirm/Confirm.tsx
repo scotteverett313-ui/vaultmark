@@ -69,18 +69,18 @@ export default function Confirm() {
       {completeness.missing.length > 0 && (
         <div className="border-b border-vm-amber bg-vm-surface px-5 py-3 lg:px-6" role="status">
           <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <span className="font-vm-sans text-[11px] font-bold text-vm-amber">
+            <span className="font-vm-sans text-[14px] font-bold text-vm-amber">
               Sealing with {completeness.missing.length} field
               {completeness.missing.length === 1 ? "" : "s"} blank
             </span>
             <Link
               href="/intake/label"
-              className="border border-vm-border-2 px-2.5 py-1 font-vm-mono text-[9px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+              className="border border-vm-border-2 px-2.5 py-1 font-vm-mono text-[11px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
             >
               ← Complete the label
             </Link>
           </div>
-          <p className="mt-1.5 text-[9px] leading-[1.7] text-vm-mid">
+          <p className="mt-1.5 text-[11px] leading-[1.7] text-vm-mid">
             {completeness.missing.map((f) => f.label).join(" · ")} will read “—” on the certificate. After sealing they
             can only be corrected by an amendment, which is dated and stays on the record.
           </p>
@@ -131,7 +131,7 @@ export default function Confirm() {
               role="checkbox"
               aria-checked={attested}
               onClick={() => setAttested((v) => !v)}
-              className={`mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center border text-[10px] transition-colors ${
+              className={`mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center border text-[13px] transition-colors ${
                 attested ? "border-vm-green bg-vm-green-bg text-vm-green" : "border-vm-border-2 bg-vm-bg text-transparent"
               }`}
             >
@@ -139,7 +139,7 @@ export default function Confirm() {
             </button>
             <label
               onClick={() => setAttested((v) => !v)}
-              className="cursor-pointer text-[10px] leading-[1.9] text-vm-mid md:max-h-none max-h-24 overflow-y-auto"
+              className="cursor-pointer text-[13px] leading-[1.9] text-vm-mid md:max-h-none max-h-24 overflow-y-auto"
             >
               {attestation}
             </label>
@@ -148,7 +148,7 @@ export default function Confirm() {
           <div className="mt-3 flex items-center gap-3">
             <Link
               href="/intake/label"
-              className="border border-vm-border-2 px-3 py-3 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+              className="border border-vm-border-2 px-3 py-3 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
             >
               ← Label
             </Link>
@@ -156,7 +156,7 @@ export default function Confirm() {
               type="button"
               onClick={seal}
               disabled={!attested || sealing}
-              className={`relative flex-1 overflow-hidden border px-4 py-3 font-vm-mono text-[10px] uppercase tracking-[0.14em] transition-colors ${
+              className={`relative flex-1 overflow-hidden border px-4 py-3 font-vm-mono text-[13px] uppercase tracking-[0.14em] transition-colors ${
                 sealing
                   ? "border-vm-green bg-vm-green-bg text-vm-green"
                   : "border-vm-gold-2 bg-vm-gold-bg text-vm-gold hover:bg-[rgba(200,168,74,0.16)]"
@@ -166,7 +166,7 @@ export default function Confirm() {
               {sealing && <span className="absolute inset-y-0 left-0 z-0 animate-[vm-seal_900ms_ease-out_forwards] bg-[rgba(58,138,90,0.35)]" />}
             </button>
           </div>
-          <p className="mt-2 text-[9px] leading-[1.7] text-vm-dim">
+          <p className="mt-2 text-[11px] leading-[1.7] text-vm-dim">
             Sealing writes this record to the session and issues the key. It cannot be undone.
           </p>
         </div>
@@ -178,7 +178,7 @@ export default function Confirm() {
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <section className="border border-vm-border bg-vm-surface p-4">
-      <h2 className="mb-3 border-b border-vm-border pb-2 text-[9px] uppercase tracking-[0.12em] text-vm-dim">{title}</h2>
+      <h2 className="mb-3 border-b border-vm-border pb-2 text-[11px] uppercase tracking-[0.12em] text-vm-dim">{title}</h2>
       <dl>{children}</dl>
     </section>
   );
@@ -187,8 +187,8 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
 function Row({ label, value, gold }: { label: string; value: string; gold?: boolean }) {
   return (
     <div className="flex items-baseline justify-between gap-4 border-b border-vm-border py-1.5 last:border-b-0">
-      <dt className="flex-shrink-0 text-[9px] text-vm-mid">{label}</dt>
-      <dd className={`text-right text-[10px] ${gold ? "break-all text-vm-gold" : "break-words text-vm-ink"}`}>{value}</dd>
+      <dt className="flex-shrink-0 text-[11px] text-vm-mid">{label}</dt>
+      <dd className={`text-right text-[13px] ${gold ? "break-all text-vm-gold" : "break-words text-vm-ink"}`}>{value}</dd>
     </div>
   );
 }
@@ -197,11 +197,11 @@ function Gate({ href, cta, title, body }: { href: string; cta: string; title: st
   return (
     <div className="flex min-h-[calc(100vh-6.75rem)] items-center justify-center p-8">
       <div className="w-full max-w-sm border border-vm-border-2 bg-vm-surface p-6 text-center">
-        <div className="mb-2 font-vm-sans text-sm font-bold text-vm-ink">{title}</div>
-        <p className="mb-4 text-[10px] leading-loose text-vm-mid">{body}</p>
+        <div className="mb-2 font-vm-sans text-base font-bold text-vm-ink">{title}</div>
+        <p className="mb-4 text-[13px] leading-loose text-vm-mid">{body}</p>
         <Link
           href={href}
-          className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+          className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
         >
           {cta}
         </Link>

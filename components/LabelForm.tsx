@@ -110,7 +110,7 @@ export default function LabelForm({
 
       <div className="md:col-span-2">
         <div className="mb-1.5 flex items-center gap-3">
-          <span className="text-[9px] uppercase tracking-[0.1em] text-vm-dim">Dimensions</span>
+          <span className="text-[11px] uppercase tracking-[0.1em] text-vm-dim">Dimensions</span>
           <div className="flex gap-px bg-vm-border" role="group" aria-label="Dimension unit">
             {(["in", "cm"] as const).map((unit) => (
               <button
@@ -118,7 +118,7 @@ export default function LabelForm({
                 type="button"
                 onClick={() => onChange({ unit })}
                 aria-pressed={value.unit === unit}
-                className={`px-2.5 py-1 font-vm-mono text-[9px] uppercase tracking-[0.1em] transition-colors ${
+                className={`px-2.5 py-1 font-vm-mono text-[11px] uppercase tracking-[0.1em] transition-colors ${
                   value.unit === unit ? "bg-vm-gold-bg text-vm-gold" : "bg-vm-surface text-vm-dim hover:text-vm-mid"
                 }`}
               >
@@ -163,14 +163,14 @@ export default function LabelForm({
       <SectionLabel>Edition &amp; Provenance</SectionLabel>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="editionType" className="text-[9px] uppercase tracking-[0.1em] text-vm-dim">
+        <label htmlFor="editionType" className="text-[11px] uppercase tracking-[0.1em] text-vm-dim">
           Edition
         </label>
         <select
           id="editionType"
           value={value.editionType}
           onChange={(e) => onChange({ editionType: e.target.value as LabelDraft["editionType"] })}
-          className="w-full cursor-pointer border border-vm-border bg-vm-surface px-2.5 py-2 font-vm-mono text-[11px] text-vm-ink outline-none transition-colors focus:border-vm-gold-2"
+          className="w-full cursor-pointer border border-vm-border bg-vm-surface px-2.5 py-2 font-vm-mono text-[14px] text-vm-ink outline-none transition-colors focus:border-vm-gold-2"
         >
           {EDITION_TYPES.map((type) => (
             <option key={type} value={type}>
@@ -253,14 +253,14 @@ export default function LabelForm({
         {vaultRecord.map((row) => (
           <div key={row.label} className="flex items-start gap-2 bg-vm-gold-bg px-2.5 py-2">
             <div className="min-w-0 flex-1">
-              <dt className="mb-1 text-[8px] uppercase tracking-[0.1em] text-vm-dim">{row.label}</dt>
-              <dd className="break-all text-[10px] leading-[1.6] text-vm-gold">{row.value}</dd>
+              <dt className="mb-1 text-[10px] uppercase tracking-[0.1em] text-vm-dim">{row.label}</dt>
+              <dd className="break-all text-[13px] leading-[1.6] text-vm-gold">{row.value}</dd>
             </div>
             {row.copyable && (
               <button
                 type="button"
                 onClick={() => copy(row.value, row.label)}
-                className="mt-2 flex-shrink-0 border border-vm-gold-2 px-1.5 py-0.5 font-vm-mono text-[8px] uppercase tracking-[0.1em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+                className="mt-2 flex-shrink-0 border border-vm-gold-2 px-1.5 py-0.5 font-vm-mono text-[10px] uppercase tracking-[0.1em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
               >
                 Copy
               </button>
@@ -274,7 +274,7 @@ export default function LabelForm({
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mt-2 border-b border-vm-border pb-2 text-[9px] uppercase tracking-[0.15em] text-vm-dim md:col-span-2">
+    <div className="mt-2 border-b border-vm-border pb-2 text-[11px] uppercase tracking-[0.15em] text-vm-dim md:col-span-2">
       {children}
     </div>
   );
@@ -307,15 +307,15 @@ function Field({
   list,
   className,
 }: FieldProps) {
-  const base = `w-full border bg-vm-surface px-2.5 py-2 font-vm-mono text-[11px] text-vm-ink outline-none transition-colors placeholder:text-vm-dim ${
+  const base = `w-full border bg-vm-surface px-2.5 py-2 font-vm-mono text-[14px] text-vm-ink outline-none transition-colors placeholder:text-vm-dim ${
     error ? "border-vm-red" : "border-vm-border focus:border-vm-gold-2"
   }`;
 
   return (
     <div className={`flex flex-col gap-1.5 ${className ?? ""}`}>
-      <label htmlFor={id} className="flex items-center gap-1.5 text-[9px] uppercase tracking-[0.1em] text-vm-dim">
+      <label htmlFor={id} className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.1em] text-vm-dim">
         {label}
-        {required && <span className="text-[10px] text-vm-gold">✦</span>}
+        {required && <span className="text-[13px] text-vm-gold">✦</span>}
       </label>
       {multiline ? (
         <textarea
@@ -340,9 +340,9 @@ function Field({
         />
       )}
       {error ? (
-        <span className="text-[9px] text-vm-red">{error}</span>
+        <span className="text-[11px] text-vm-red">{error}</span>
       ) : hint ? (
-        <span className="text-[9px] leading-[1.6] text-vm-dim">{hint}</span>
+        <span className="text-[11px] leading-[1.6] text-vm-dim">{hint}</span>
       ) : null}
     </div>
   );
@@ -367,7 +367,7 @@ function BareInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full border border-vm-border bg-vm-surface px-2.5 py-2 font-vm-mono text-[11px] text-vm-ink outline-none transition-colors placeholder:text-vm-dim focus:border-vm-gold-2"
+      className="w-full border border-vm-border bg-vm-surface px-2.5 py-2 font-vm-mono text-[14px] text-vm-ink outline-none transition-colors placeholder:text-vm-dim focus:border-vm-gold-2"
       {...rest}
     />
   );

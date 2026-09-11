@@ -21,15 +21,15 @@ export default function PieceCard({ piece, onDownloadKey, onOpen }: PieceCardPro
       </div>
 
       <div className="flex flex-1 flex-col gap-1 border-t border-vm-border p-3">
-        <h3 className="truncate font-vm-serif text-[13px] italic text-vm-ink" title={piece.title}>
+        <h3 className="truncate font-vm-serif text-[16px] italic text-vm-ink" title={piece.title}>
           {piece.title}
         </h3>
-        <p className="truncate text-[9px] text-vm-mid" title={piece.artist}>
+        <p className="truncate text-[11px] text-vm-mid" title={piece.artist}>
           {piece.artist}
         </p>
         <div className="mt-auto flex items-center justify-between gap-2 pt-2">
-          <span className="truncate text-[8px] tracking-[0.06em] text-vm-dim">{piece.certificateNumber}</span>
-          <span className="flex-shrink-0 text-[8px] text-vm-gold-2">{piece.qrSymbol}</span>
+          <span className="truncate text-[10px] tracking-[0.06em] text-vm-dim">{piece.certificateNumber}</span>
+          <span className="flex-shrink-0 text-[10px] text-vm-gold-2">{piece.qrSymbol}</span>
         </div>
       </div>
 
@@ -37,14 +37,14 @@ export default function PieceCard({ piece, onDownloadKey, onOpen }: PieceCardPro
         <button
           type="button"
           onClick={() => onDownloadKey(piece)}
-          className="bg-vm-panel px-2 py-2 font-vm-mono text-[8px] uppercase tracking-[0.08em] text-vm-dim transition-colors hover:bg-vm-gold-bg hover:text-vm-gold"
+          className="bg-vm-panel px-2 py-2 font-vm-mono text-[10px] uppercase tracking-[0.08em] text-vm-dim transition-colors hover:bg-vm-gold-bg hover:text-vm-gold"
         >
           ↓ Key
         </button>
         <button
           type="button"
           onClick={() => onOpen(piece)}
-          className="bg-vm-panel px-2 py-2 font-vm-mono text-[8px] uppercase tracking-[0.08em] text-vm-dim transition-colors hover:bg-vm-gold-bg hover:text-vm-gold"
+          className="bg-vm-panel px-2 py-2 font-vm-mono text-[10px] uppercase tracking-[0.08em] text-vm-dim transition-colors hover:bg-vm-gold-bg hover:text-vm-gold"
         >
           View →
         </button>

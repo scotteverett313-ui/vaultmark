@@ -28,7 +28,7 @@ export default function QRSymbolGrid({ selected, onSelect }: QRSymbolGridProps) 
           }`}
         >
           <SymbolSwatch symbol={symbol} />
-          <span className={`text-[8px] ${selected === symbol ? "text-vm-gold" : "text-vm-dim"}`}>{symbol}</span>
+          <span className={`text-[10px] ${selected === symbol ? "text-vm-gold" : "text-vm-dim"}`}>{symbol}</span>
         </button>
       ))}
     </div>

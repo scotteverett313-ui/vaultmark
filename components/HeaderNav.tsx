@@ -14,14 +14,14 @@ export default function HeaderNav() {
 
   return (
     <div className="ml-auto flex items-center gap-3">
-      <span className="hidden items-center gap-2 text-[9px] tracking-[0.12em] text-vm-mid sm:flex">
+      <span className="hidden items-center gap-2 text-[11px] tracking-[0.12em] text-vm-mid sm:flex">
         <span className="h-1.5 w-1.5 rounded-full bg-vm-green shadow-[0_0_6px_#3A8A5A]" />
         {sessionType === "gallery" ? "GALLERY" : "PRIVATE"} · {pieceCount} VAULTED
       </span>
       {pathname !== "/settings" && (
         <Link
           href="/settings"
-          className="whitespace-nowrap border border-vm-border-2 px-2.5 py-1 font-vm-mono text-[9px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+          className="whitespace-nowrap border border-vm-border-2 px-2.5 py-1 font-vm-mono text-[11px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
         >
           Settings
         </Link>
@@ -29,7 +29,7 @@ export default function HeaderNav() {
       {pathname !== "/library" && (
         <Link
           href="/library"
-          className="whitespace-nowrap border border-vm-border-2 px-2.5 py-1 font-vm-mono text-[9px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+          className="whitespace-nowrap border border-vm-border-2 px-2.5 py-1 font-vm-mono text-[11px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
         >
           ⊞ Library
         </Link>

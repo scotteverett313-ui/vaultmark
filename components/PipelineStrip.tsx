@@ -36,13 +36,13 @@ function Frame({ index, frame }: { index: number; frame: PipelineFrame }) {
 
   return (
     <div className="flex min-w-[132px] flex-1 flex-col gap-1.5 bg-vm-surface p-2.5">
-      <div className="text-lg font-bold leading-none text-vm-border-2">{String(index + 1).padStart(2, "0")}</div>
-      <div className="text-[8px] uppercase tracking-[0.08em] text-vm-dim">{frame.label}</div>
+      <div className="text-xl font-bold leading-none text-vm-border-2">{String(index + 1).padStart(2, "0")}</div>
+      <div className="text-[10px] uppercase tracking-[0.08em] text-vm-dim">{frame.label}</div>
       <div className="flex flex-1 items-center justify-center overflow-hidden border border-vm-border bg-vm-bg">
         {frame.draw ? (
           <canvas ref={ref} className="block h-auto max-h-[120px] w-full [image-rendering:pixelated]" />
         ) : (
-          <span className="p-2 text-center text-[8px] text-vm-dim">—</span>
+          <span className="p-2 text-center text-[10px] text-vm-dim">—</span>
         )}
       </div>
     </div>

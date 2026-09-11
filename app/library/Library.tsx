@@ -141,7 +141,7 @@ export default function Library() {
       </dl>
 
       {persistFailed && (
-        <p className="border-b border-vm-border bg-vm-surface px-4 py-2 text-[9px] text-vm-amber">
+        <p className="border-b border-vm-border bg-vm-surface px-4 py-2 text-[11px] text-vm-amber">
           This browser is not saving the library. Download your keys and an export before closing.
         </p>
       )}
@@ -153,13 +153,13 @@ export default function Library() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search title, artist, medium…"
           aria-label="Search pieces"
-          className="min-w-[160px] flex-1 border border-vm-border bg-vm-surface px-2.5 py-1.5 font-vm-mono text-[10px] text-vm-ink outline-none transition-colors placeholder:text-vm-dim focus:border-vm-gold-2 sm:max-w-[240px]"
+          className="min-w-[160px] flex-1 border border-vm-border bg-vm-surface px-2.5 py-1.5 font-vm-mono text-[13px] text-vm-ink outline-none transition-colors placeholder:text-vm-dim focus:border-vm-gold-2 sm:max-w-[240px]"
         />
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value as "all" | PieceStatus)}
           aria-label="Filter by status"
-          className="cursor-pointer border border-vm-border bg-vm-surface px-2 py-1.5 font-vm-mono text-[10px] text-vm-mid outline-none focus:border-vm-gold-2"
+          className="cursor-pointer border border-vm-border bg-vm-surface px-2 py-1.5 font-vm-mono text-[13px] text-vm-mid outline-none focus:border-vm-gold-2"
         >
           <option value="all">All Status</option>
           {STATUSES.map((s) => (
@@ -172,7 +172,7 @@ export default function Library() {
           value={artist}
           onChange={(e) => setArtist(e.target.value)}
           aria-label="Filter by artist"
-          className="cursor-pointer border border-vm-border bg-vm-surface px-2 py-1.5 font-vm-mono text-[10px] text-vm-mid outline-none focus:border-vm-gold-2"
+          className="cursor-pointer border border-vm-border bg-vm-surface px-2 py-1.5 font-vm-mono text-[13px] text-vm-mid outline-none focus:border-vm-gold-2"
         >
           <option value="all">All Artists</option>
           {artists.map((a) => (
@@ -182,7 +182,7 @@ export default function Library() {
           ))}
         </select>
 
-        <span className="text-[9px] tracking-[0.1em] text-vm-dim">
+        <span className="text-[11px] tracking-[0.1em] text-vm-dim">
           {visible.length === pieces.length
             ? `${pieces.length} work${pieces.length === 1 ? "" : "s"}`
             : `${visible.length} of ${pieces.length} works`}
@@ -197,7 +197,7 @@ export default function Library() {
                 onClick={() => chooseView(v)}
                 aria-pressed={view === v}
                 aria-label={`${v} view`}
-                className={`px-2.5 py-1.5 font-vm-mono text-xs transition-colors ${
+                className={`px-2.5 py-1.5 font-vm-mono text-sm transition-colors ${
                   view === v ? "bg-vm-gold-bg text-vm-gold" : "bg-vm-surface text-vm-dim hover:text-vm-mid"
                 }`}
               >
@@ -211,7 +211,7 @@ export default function Library() {
               <button
                 type="button"
                 onClick={() => download(buildCollectionCsv(pieces), `vaultmark-collection-${stamp}.csv`, "text/csv", "Collection exported as CSV")}
-                className="border border-vm-border px-2.5 py-1.5 font-vm-mono text-[9px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+                className="border border-vm-border px-2.5 py-1.5 font-vm-mono text-[11px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
               >
                 CSV
               </button>
@@ -226,7 +226,7 @@ export default function Library() {
                   );
                 }}
                 title="Full backup including key credentials"
-                className="border border-vm-border px-2.5 py-1.5 font-vm-mono text-[9px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+                className="border border-vm-border px-2.5 py-1.5 font-vm-mono text-[11px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
               >
                 Backup
               </button>
@@ -236,7 +236,7 @@ export default function Library() {
           <button
             type="button"
             onClick={() => router.push("/intake/capture")}
-            className="whitespace-nowrap border border-vm-gold-2 bg-vm-gold-bg px-3 py-1.5 font-vm-mono text-[9px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+            className="whitespace-nowrap border border-vm-gold-2 bg-vm-gold-bg px-3 py-1.5 font-vm-mono text-[11px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
           >
             + Vault Artwork
           </button>
@@ -252,7 +252,7 @@ export default function Library() {
           secondary={{ label: "Restore a backup", href: "/settings" }}
         />
       ) : visible.length === 0 ? (
-        <div className="p-16 text-center text-[11px] text-vm-dim">Nothing matches those filters.</div>
+        <div className="p-16 text-center text-[14px] text-vm-dim">Nothing matches those filters.</div>
       ) : view === "grid" ? (
         <div className="grid grid-cols-2 gap-px p-px sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {visible.map((piece) => (
@@ -269,7 +269,7 @@ export default function Library() {
                   type="button"
                   disabled={!col.field}
                   onClick={() => col.field && sortBy(col.field)}
-                  className={`border-r border-vm-border px-3 py-2 text-left text-[8px] uppercase tracking-[0.12em] transition-colors last:border-r-0 ${
+                  className={`border-r border-vm-border px-3 py-2 text-left text-[10px] uppercase tracking-[0.12em] transition-colors last:border-r-0 ${
                     col.field ? "cursor-pointer hover:text-vm-mid" : "cursor-default"
                   } ${col.field === sortField ? "text-vm-gold" : "text-vm-dim"}`}
                 >
@@ -300,9 +300,9 @@ export default function Library() {
 function Stat({ label, value, sub, small }: { label: string; value: string; sub: string; small?: boolean }) {
   return (
     <div className="bg-vm-panel px-4 py-3">
-      <dt className="mb-1 text-[8px] uppercase tracking-[0.14em] text-vm-dim">{label}</dt>
-      <dd className={`font-bold leading-none text-vm-gold ${small ? "text-sm" : "text-xl"}`}>{value}</dd>
-      <p className="mt-1 text-[9px] text-vm-dim">{sub}</p>
+      <dt className="mb-1 text-[10px] uppercase tracking-[0.14em] text-vm-dim">{label}</dt>
+      <dd className={`font-bold leading-none text-vm-gold ${small ? "text-base" : "text-2xl"}`}>{value}</dd>
+      <p className="mt-1 text-[11px] text-vm-dim">{sub}</p>
     </div>
   );
 }
@@ -323,18 +323,18 @@ function Empty({
   return (
     <div className="flex flex-col items-center justify-center gap-4 px-6 py-24 text-center">
       <div className="text-4xl text-vm-border-2">⬡</div>
-      <div className="font-vm-sans text-sm font-bold text-vm-ink">{title}</div>
-      <p className="max-w-xs text-[10px] leading-loose text-vm-mid">{body}</p>
+      <div className="font-vm-sans text-base font-bold text-vm-ink">{title}</div>
+      <p className="max-w-xs text-[13px] leading-loose text-vm-mid">{body}</p>
       <Link
         href={href}
-        className="border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+        className="border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
       >
         {cta}
       </Link>
       {secondary && (
         <Link
           href={secondary.href}
-          className="font-vm-mono text-[9px] uppercase tracking-[0.12em] text-vm-dim underline-offset-4 transition-colors hover:text-vm-gold hover:underline"
+          className="font-vm-mono text-[11px] uppercase tracking-[0.12em] text-vm-dim underline-offset-4 transition-colors hover:text-vm-gold hover:underline"
         >
           {secondary.label}
         </Link>

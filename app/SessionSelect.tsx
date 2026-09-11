@@ -56,11 +56,11 @@ export default function SessionSelect() {
   return (
     <div className="flex min-h-[calc(100vh-3.25rem)] items-center justify-center px-4 py-10">
       <div className="w-full max-w-[560px]">
-        <div className="mb-2 text-[11px] tracking-[0.2em] text-vm-dim">VAULTMARK · INTAKE WORKFLOW</div>
-        <h1 className="mb-1.5 font-vm-sans text-2xl font-bold tracking-[0.05em] text-vm-ink sm:text-[28px]">
+        <div className="mb-2 text-[14px] tracking-[0.2em] text-vm-dim">VAULTMARK · INTAKE WORKFLOW</div>
+        <h1 className="mb-1.5 font-vm-sans text-3xl font-bold tracking-[0.05em] text-vm-ink sm:text-[34px]">
           Who is logging in today?
         </h1>
-        <p className="mb-8 text-[11px] leading-[1.8] text-vm-mid">
+        <p className="mb-8 text-[14px] leading-[1.8] text-vm-mid">
           Your session type determines the label format, attestation language, and key routing. You can switch between
           pieces at any time.
         </p>
@@ -68,14 +68,14 @@ export default function SessionSelect() {
         {hasActiveSession && (
           <div className="mb-6 flex flex-wrap items-center gap-3 border border-vm-border-2 bg-vm-surface px-4 py-3">
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-vm-green shadow-[0_0_6px_#3A8A5A]" />
-            <span className="text-[10px] text-vm-mid">
+            <span className="text-[13px] text-vm-mid">
               {sessionType === "gallery" ? "Gallery" : "Private"} session in progress · {sessionPieceCount}{" "}
               {sessionPieceCount === 1 ? "piece" : "pieces"} vaulted this session
             </span>
             <button
               type="button"
               onClick={() => router.push("/library")}
-              className="ml-auto border border-vm-border-2 px-3 py-1.5 font-vm-mono text-[9px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+              className="ml-auto border border-vm-border-2 px-3 py-1.5 font-vm-mono text-[11px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
             >
               Continue →
             </button>
@@ -104,8 +104,8 @@ export default function SessionSelect() {
                     className="sr-only"
                   />
                   <Icon className="mb-3 h-6 w-6 text-vm-gold" strokeWidth={1.5} aria-hidden />
-                  <div className="mb-1.5 font-vm-sans text-[13px] font-bold text-vm-ink">{title}</div>
-                  <p className="text-[10px] leading-[1.8] text-vm-mid">{description}</p>
+                  <div className="mb-1.5 font-vm-sans text-[16px] font-bold text-vm-ink">{title}</div>
+                  <p className="text-[13px] leading-[1.8] text-vm-mid">{description}</p>
                 </label>
               );
             })}
@@ -116,13 +116,13 @@ export default function SessionSelect() {
           type="button"
           onClick={beginSession}
           disabled={!selected}
-          className="mt-5 w-full border border-vm-gold-2 bg-vm-gold-bg px-4 py-3.5 font-vm-mono text-[11px] uppercase tracking-[0.15em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-30"
+          className="mt-5 w-full border border-vm-gold-2 bg-vm-gold-bg px-4 py-3.5 font-vm-mono text-[14px] uppercase tracking-[0.15em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-30"
         >
           {hasActiveSession ? "Begin New Session →" : "Begin Session →"}
         </button>
 
         {pieceCount > 0 && (
-          <p className="mt-2 text-[9px] leading-relaxed text-vm-dim">
+          <p className="mt-2 text-[11px] leading-relaxed text-vm-dim">
             Your collection of {pieceCount} {pieceCount === 1 ? "piece" : "pieces"} is kept. A session only sets the
             attestation wording and dates the intake — starting one never clears what you have vaulted.
           </p>

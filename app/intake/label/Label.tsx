@@ -116,22 +116,22 @@ export default function Label() {
         <div className="flex items-center gap-3">
           <Link
             href="/intake/vault"
-            className="border border-vm-border-2 px-3 py-3 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+            className="border border-vm-border-2 px-3 py-3 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
           >
             ← Vault
           </Link>
           <button
             type="button"
             onClick={proceed}
-            className="flex-1 border border-vm-gold-2 bg-vm-gold-bg px-4 py-3 font-vm-mono text-[10px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] md:max-w-xs"
+            className="flex-1 border border-vm-gold-2 bg-vm-gold-bg px-4 py-3 font-vm-mono text-[13px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] md:max-w-xs"
           >
             {warned && completeness.missingRecommended.length > 0 ? "Continue anyway →" : "Review & Confirm →"}
           </button>
         </div>
         {Object.keys(errors).length > 0 ? (
-          <p className="mt-2 text-[9px] text-vm-red">Title and artist name are required before this record can be sealed.</p>
+          <p className="mt-2 text-[11px] text-vm-red">Title and artist name are required before this record can be sealed.</p>
         ) : warned && completeness.missingRecommended.length > 0 ? (
-          <p className="mt-2 text-[9px] text-vm-amber">
+          <p className="mt-2 text-[11px] text-vm-amber">
             {completeness.missingRecommended.length} expected field
             {completeness.missingRecommended.length === 1 ? " is" : "s are"} still blank — see Record readiness above.
           </p>
@@ -145,11 +145,11 @@ function Gate({ href, cta, title, body }: { href: string; cta: string; title: st
   return (
     <div className="flex min-h-[calc(100vh-6.75rem)] items-center justify-center p-8">
       <div className="w-full max-w-sm border border-vm-border-2 bg-vm-surface p-6 text-center">
-        <div className="mb-2 font-vm-sans text-sm font-bold text-vm-ink">{title}</div>
-        <p className="mb-4 text-[10px] leading-loose text-vm-mid">{body}</p>
+        <div className="mb-2 font-vm-sans text-base font-bold text-vm-ink">{title}</div>
+        <p className="mb-4 text-[13px] leading-loose text-vm-mid">{body}</p>
         <Link
           href={href}
-          className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+          className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
         >
           {cta}
         </Link>

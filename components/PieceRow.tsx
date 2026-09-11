@@ -20,10 +20,10 @@ export default function PieceRow({ piece, onDownloadKey, onOpen }: PieceRowProps
           <PieceThumb piece={piece} size={72} />
         </div>
       </Cell>
-      <Cell className="truncate font-vm-serif text-[11px] italic text-vm-ink" title={piece.title}>
+      <Cell className="truncate font-vm-serif text-[14px] italic text-vm-ink" title={piece.title}>
         {piece.title}
       </Cell>
-      <Cell className="truncate text-[9px] text-vm-gold">{piece.certificateNumber}</Cell>
+      <Cell className="truncate text-[11px] text-vm-gold">{piece.certificateNumber}</Cell>
       <Cell className="truncate" title={piece.artist}>
         {piece.artist}
       </Cell>
@@ -46,7 +46,7 @@ function Cell({ children, className, title }: { children: React.ReactNode; class
   return (
     <div
       title={title}
-      className={`flex items-center overflow-hidden border-r border-vm-border px-3 py-2.5 text-[10px] text-vm-mid last:border-r-0 ${className ?? ""}`}
+      className={`flex items-center overflow-hidden border-r border-vm-border px-3 py-2.5 text-[13px] text-vm-mid last:border-r-0 ${className ?? ""}`}
     >
       {children}
     </div>
@@ -58,7 +58,7 @@ function RowButton({ children, onClick }: { children: React.ReactNode; onClick: 
     <button
       type="button"
       onClick={onClick}
-      className="whitespace-nowrap border border-vm-border px-1.5 py-1 font-vm-mono text-[8px] uppercase text-vm-dim transition-colors hover:border-vm-gold hover:text-vm-gold"
+      className="whitespace-nowrap border border-vm-border px-1.5 py-1 font-vm-mono text-[10px] uppercase text-vm-dim transition-colors hover:border-vm-gold hover:text-vm-gold"
     >
       {children}
     </button>

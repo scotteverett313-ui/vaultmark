@@ -13,10 +13,10 @@ export default function CertificateCard({ piece }: { piece: VaultPiece }) {
     <div className="w-full border border-vm-border bg-vm-surface p-5 font-vm-mono">
       <div className="mb-4 flex items-start justify-between gap-4 border-b border-vm-border-2 pb-3">
         <div>
-          <div className="text-[13px] font-bold tracking-[0.2em] text-vm-gold">VAULTMARK</div>
-          <div className="mt-0.5 text-[8px] uppercase tracking-[0.12em] text-vm-dim">Certificate of Authenticity</div>
+          <div className="text-[16px] font-bold tracking-[0.2em] text-vm-gold">VAULTMARK</div>
+          <div className="mt-0.5 text-[10px] uppercase tracking-[0.12em] text-vm-dim">Certificate of Authenticity</div>
         </div>
-        <div className="text-right text-[9px] leading-relaxed text-vm-dim">
+        <div className="text-right text-[11px] leading-relaxed text-vm-dim">
           <div className="text-vm-gold">{piece.certificateNumber}</div>
           <div>{issuedLabel}</div>
         </div>
@@ -32,8 +32,8 @@ export default function CertificateCard({ piece }: { piece: VaultPiece }) {
           />
         )}
         <div className="min-w-0">
-          <div className="font-vm-serif text-base font-bold italic leading-tight text-vm-ink">{piece.title}</div>
-          <div className="mt-1 text-[11px] text-vm-mid">
+          <div className="font-vm-serif text-lg font-bold italic leading-tight text-vm-ink">{piece.title}</div>
+          <div className="mt-1 text-[14px] text-vm-mid">
             {piece.artist} · {piece.year}
           </div>
         </div>
@@ -52,12 +52,12 @@ export default function CertificateCard({ piece }: { piece: VaultPiece }) {
 
       {amendments.length > 0 && (
         <div className="mt-3.5 border-t border-vm-border pt-2.5">
-          <div className="mb-1.5 text-[8px] uppercase tracking-wider text-vm-dim">
+          <div className="mb-1.5 text-[10px] uppercase tracking-wider text-vm-dim">
             Amendments · {amendments.length}
           </div>
           <ol className="flex flex-col gap-1">
             {amendments.map((amendment, i) => (
-              <li key={`${amendment.at}-${i}`} className="text-[8px] leading-[1.7] text-vm-mid">
+              <li key={`${amendment.at}-${i}`} className="text-[10px] leading-[1.7] text-vm-mid">
                 <span className="text-vm-dim">{formatAmendmentDate(amendment.at)} · </span>
                 <span className="text-vm-ink">{fieldLabel(amendment.field)}</span>
                 <span className="text-vm-dim"> — was </span>
@@ -68,7 +68,7 @@ export default function CertificateCard({ piece }: { piece: VaultPiece }) {
         </div>
       )}
 
-      <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 border-t border-vm-border pt-2.5 text-[8px] tracking-[0.08em] text-vm-dim">
+      <div className="mt-3.5 flex flex-wrap items-center justify-between gap-2 border-t border-vm-border pt-2.5 text-[10px] tracking-[0.08em] text-vm-dim">
         <span>{piece.gallery !== "—" ? piece.gallery : "Independent"}</span>
         <span>{piece.signatory !== "—" ? piece.signatory : piece.artist}</span>
       </div>
@@ -79,8 +79,8 @@ export default function CertificateCard({ piece }: { piece: VaultPiece }) {
 function CertCell({ label, value, className }: { label: string; value: string; className?: string }) {
   return (
     <div className={`bg-vm-surface px-2.5 py-2 ${className ?? ""}`}>
-      <div className="mb-0.5 text-[8px] uppercase tracking-wider text-vm-dim">{label}</div>
-      <div className="break-words text-[10px] leading-[1.6] text-vm-ink">{value}</div>
+      <div className="mb-0.5 text-[10px] uppercase tracking-wider text-vm-dim">{label}</div>
+      <div className="break-words text-[13px] leading-[1.6] text-vm-ink">{value}</div>
     </div>
   );
 }

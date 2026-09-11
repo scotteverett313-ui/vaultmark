@@ -10,7 +10,7 @@ const STATUS_STYLES: Record<PieceStatus, string> = {
 export default function StatusPill({ status }: { status: PieceStatus }) {
   return (
     <span
-      className={`inline-block px-2 py-0.5 font-vm-mono text-[7px] uppercase tracking-wider ${STATUS_STYLES[status]}`}
+      className={`inline-block px-2 py-0.5 font-vm-mono text-[9px] uppercase tracking-wider ${STATUS_STYLES[status]}`}
     >
       {status}
     </span>

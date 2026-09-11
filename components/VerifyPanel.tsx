@@ -77,7 +77,7 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
     <div className="flex flex-col gap-4">
       <div className="grid gap-4 md:grid-cols-2">
         <div>
-          <div className="mb-1.5 text-[9px] uppercase tracking-[0.12em] text-vm-dim">1 · The image</div>
+          <div className="mb-1.5 text-[11px] uppercase tracking-[0.12em] text-vm-dim">1 · The image</div>
           <div
             onClick={() => fileRef.current?.click()}
             onDragOver={(e) => e.preventDefault()}
@@ -93,9 +93,9 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
               <img src={preview} alt="" className="max-h-[180px] w-auto" />
             ) : (
               <>
-                <span className="text-2xl text-vm-dim">⬡</span>
-                <span className="font-vm-sans text-xs font-bold text-vm-ink">Drop the artwork or browse</span>
-                <span className="text-[9px] text-vm-mid">The copy you want checked</span>
+                <span className="text-3xl text-vm-dim">⬡</span>
+                <span className="font-vm-sans text-sm font-bold text-vm-ink">Drop the artwork or browse</span>
+                <span className="text-[11px] text-vm-mid">The copy you want checked</span>
               </>
             )}
             <input
@@ -109,11 +109,11 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
               }}
             />
           </div>
-          {file && <p className="mt-1.5 truncate text-[9px] text-vm-dim">{file.name}</p>}
+          {file && <p className="mt-1.5 truncate text-[11px] text-vm-dim">{file.name}</p>}
         </div>
 
         <div>
-          <div className="mb-1.5 text-[9px] uppercase tracking-[0.12em] text-vm-dim">2 · The key</div>
+          <div className="mb-1.5 text-[11px] uppercase tracking-[0.12em] text-vm-dim">2 · The key</div>
           <textarea
             value={keyText}
             onChange={(e) => {
@@ -122,7 +122,7 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
             }}
             placeholder="Paste the .vmk credential supplied with the work…"
             aria-label="Key credential"
-            className="min-h-[168px] w-full resize-y border border-vm-border bg-vm-surface p-3 font-vm-mono text-[9px] leading-[1.8] text-vm-ink outline-none transition-colors placeholder:text-vm-dim focus:border-vm-gold-2"
+            className="min-h-[168px] w-full resize-y border border-vm-border bg-vm-surface p-3 font-vm-mono text-[11px] leading-[1.8] text-vm-ink outline-none transition-colors placeholder:text-vm-dim focus:border-vm-gold-2"
           />
         </div>
       </div>
@@ -131,15 +131,15 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
         type="button"
         onClick={run}
         disabled={!file || !keyText.trim() || outcome.kind === "working"}
-        className="w-full border border-vm-gold-2 bg-vm-gold-bg px-4 py-3.5 font-vm-mono text-[11px] uppercase tracking-[0.15em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-30"
+        className="w-full border border-vm-gold-2 bg-vm-gold-bg px-4 py-3.5 font-vm-mono text-[14px] uppercase tracking-[0.15em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-30"
       >
         {outcome.kind === "working" ? "Checking…" : "Run Verification"}
       </button>
 
       {outcome.kind === "unreadable" && (
         <div className="border border-vm-red p-4" role="status">
-          <div className="mb-1 font-vm-sans text-sm font-bold text-vm-red">Could not check</div>
-          <p className="text-[10px] leading-[1.8] text-vm-mid">{outcome.reason}</p>
+          <div className="mb-1 font-vm-sans text-base font-bold text-vm-red">Could not check</div>
+          <p className="text-[13px] leading-[1.8] text-vm-mid">{outcome.reason}</p>
         </div>
       )}
 
@@ -148,10 +148,10 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
           className={`border p-5 ${outcome.result.pass ? "border-vm-green bg-vm-green-bg" : "border-vm-red"}`}
           role="status"
         >
-          <div className={`font-vm-sans text-xl font-bold ${outcome.result.pass ? "text-vm-green" : "text-vm-red"}`}>
+          <div className={`font-vm-sans text-2xl font-bold ${outcome.result.pass ? "text-vm-green" : "text-vm-red"}`}>
             {outcome.result.pass ? "✓ Authenticated" : "✕ Not authenticated"}
           </div>
-          <p className="mt-1 text-[10px] leading-[1.8] text-vm-mid">
+          <p className="mt-1 text-[13px] leading-[1.8] text-vm-mid">
             {outcome.result.pass
               ? "This image is the original this key was issued for. All three layers agree."
               : "This image and key do not belong together. Any failed layer below is enough to reject it."}
@@ -162,14 +162,14 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
               const layer = outcome.result[field];
               return (
                 <div key={field} className="flex items-start gap-3 bg-vm-panel p-3">
-                  <span className={`text-sm leading-none ${layer.pass ? "text-vm-green" : "text-vm-red"}`}>
+                  <span className={`text-base leading-none ${layer.pass ? "text-vm-green" : "text-vm-red"}`}>
                     {layer.pass ? "✓" : "✕"}
                   </span>
                   <div>
-                    <div className="text-[10px] text-vm-ink">
+                    <div className="text-[13px] text-vm-ink">
                       Layer {i + 1} · {label}
                     </div>
-                    <div className="mt-0.5 text-[9px] leading-[1.7] text-vm-mid">{layer.detail}</div>
+                    <div className="mt-0.5 text-[11px] leading-[1.7] text-vm-mid">{layer.detail}</div>
                   </div>
                 </div>
               );
@@ -185,7 +185,7 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
 
           {record && (
             <div className="mt-4 border border-vm-border-2 p-3">
-              <div className="mb-2 text-[9px] uppercase tracking-[0.12em] text-vm-dim">
+              <div className="mb-2 text-[11px] uppercase tracking-[0.12em] text-vm-dim">
                 Record — from this device&apos;s library
               </div>
               <dl className="grid gap-px bg-vm-border sm:grid-cols-2">
@@ -199,7 +199,7 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
           )}
 
           {outcome.result.pass && !record && (
-            <p className="mt-3 text-[9px] leading-[1.7] text-vm-dim">
+            <p className="mt-3 text-[11px] leading-[1.7] text-vm-dim">
               A key proves which vault entry an image belongs to. Title, artist, and certificate live with whoever holds
               the record — this browser has no entry for {outcome.vaultId}.
             </p>
@@ -213,8 +213,8 @@ export default function VerifyPanel({ lookupRecord }: { lookupRecord?: RecordLoo
 function Fact({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-vm-panel px-3 py-2">
-      <dt className="mb-0.5 text-[8px] uppercase tracking-[0.1em] text-vm-dim">{label}</dt>
-      <dd className="break-words text-[10px] text-vm-ink">{value}</dd>
+      <dt className="mb-0.5 text-[10px] uppercase tracking-[0.1em] text-vm-dim">{label}</dt>
+      <dd className="break-words text-[13px] text-vm-ink">{value}</dd>
     </div>
   );
 }

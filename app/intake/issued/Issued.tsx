@@ -23,13 +23,13 @@ export default function Issued() {
     return (
       <div className="flex min-h-[calc(100vh-6.75rem)] items-center justify-center p-8">
         <div className="w-full max-w-sm border border-vm-border-2 bg-vm-surface p-6 text-center">
-          <div className="mb-2 font-vm-sans text-sm font-bold text-vm-ink">No key issued yet</div>
-          <p className="mb-4 text-[10px] leading-loose text-vm-mid">
+          <div className="mb-2 font-vm-sans text-base font-bold text-vm-ink">No key issued yet</div>
+          <p className="mb-4 text-[13px] leading-loose text-vm-mid">
             This screen shows the credential for a sealed piece. Nothing has been sealed in this session.
           </p>
           <Link
             href="/intake/capture"
-            className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+            className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
           >
             Start an intake →
           </Link>
@@ -67,29 +67,29 @@ export default function Issued() {
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 px-5 py-10 lg:py-14">
-      <div className="flex h-16 w-16 animate-[vm-badge_600ms_ease-out] items-center justify-center rounded-full border-2 border-vm-green text-2xl text-vm-green shadow-[0_0_24px_rgba(58,138,90,0.3)]">
+      <div className="flex h-16 w-16 animate-[vm-badge_600ms_ease-out] items-center justify-center rounded-full border-2 border-vm-green text-3xl text-vm-green shadow-[0_0_24px_rgba(58,138,90,0.3)]">
         ✦
       </div>
 
       <div className="text-center">
-        <h1 className="font-vm-sans text-xl font-bold text-vm-ink">Vault Sealed — Key Issued</h1>
-        <p className="mt-1 font-vm-serif text-base italic text-vm-mid">
+        <h1 className="font-vm-sans text-2xl font-bold text-vm-ink">Vault Sealed — Key Issued</h1>
+        <p className="mt-1 font-vm-serif text-lg italic text-vm-mid">
           {piece.title} · {piece.artist}
         </p>
       </div>
 
-      <p className="max-w-lg text-center text-[11px] leading-[2] text-vm-mid">{context}</p>
+      <p className="max-w-lg text-center text-[14px] leading-[2] text-vm-mid">{context}</p>
 
       <div className="w-full">
-        <div className="mb-2 text-[9px] uppercase tracking-[0.15em] text-vm-dim">Key Credential</div>
-        <div className="max-h-20 overflow-y-auto break-all border border-vm-gold-2 bg-vm-surface p-3 font-vm-mono text-[9px] leading-[1.9] text-vm-gold">
+        <div className="mb-2 text-[11px] uppercase tracking-[0.15em] text-vm-dim">Key Credential</div>
+        <div className="max-h-20 overflow-y-auto break-all border border-vm-gold-2 bg-vm-surface p-3 font-vm-mono text-[11px] leading-[1.9] text-vm-gold">
           {piece.key}
         </div>
         <div className="mt-2 grid gap-2 sm:grid-cols-3">
           <button
             type="button"
             onClick={() => downloadKey(piece)}
-            className="border border-vm-green bg-vm-green-bg px-3 py-3 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-green transition-colors hover:bg-[rgba(58,138,90,0.2)]"
+            className="border border-vm-green bg-vm-green-bg px-3 py-3 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-green transition-colors hover:bg-[rgba(58,138,90,0.2)]"
           >
             ↓ Download .VMK
           </button>
@@ -100,7 +100,7 @@ export default function Issued() {
               showToast("Key copied to clipboard");
               setBackedUp(true);
             }}
-            className="border border-vm-border-2 px-3 py-3 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+            className="border border-vm-border-2 px-3 py-3 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
           >
             Copy Key
           </button>
@@ -114,7 +114,7 @@ export default function Issued() {
                 `Certificate downloaded — ${piece.certificateNumber}`,
               )
             }
-            className="border border-vm-border-2 px-3 py-3 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+            className="border border-vm-border-2 px-3 py-3 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
           >
             ↓ Certificate
           </button>
@@ -127,19 +127,19 @@ export default function Issued() {
         }`}
       >
         {backedUp ? (
-          <p className="text-[10px] leading-[1.9] text-vm-green">
+          <p className="text-[13px] leading-[1.9] text-vm-green">
             ✓ Key backed up. Keep a second copy somewhere you control — Vaultmark cannot reissue it.
           </p>
         ) : (
           <>
-            <p className="text-[10px] leading-[1.9] text-vm-amber">
+            <p className="text-[13px] leading-[1.9] text-vm-amber">
               Have you saved this key to a second location? It exists nowhere else. If it is lost, this piece can never
               be verified against its original again.
             </p>
             <button
               type="button"
               onClick={() => setBackedUp(true)}
-              className="mt-2.5 border border-vm-border-2 px-3 py-2 font-vm-mono text-[9px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+              className="mt-2.5 border border-vm-border-2 px-3 py-2 font-vm-mono text-[11px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
             >
               I've saved it elsewhere
             </button>
@@ -155,7 +155,7 @@ export default function Issued() {
             type="button"
             onClick={nextArtwork}
             disabled={!backedUp}
-            className="border border-vm-gold-2 bg-vm-gold-bg px-4 py-3.5 font-vm-mono text-[11px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-30"
+            className="border border-vm-gold-2 bg-vm-gold-bg px-4 py-3.5 font-vm-mono text-[14px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-30"
           >
             + Vault Next Artwork →
           </button>
@@ -163,13 +163,13 @@ export default function Issued() {
             type="button"
             onClick={() => router.push("/library")}
             disabled={!backedUp}
-            className="border border-vm-border-2 px-4 py-3.5 font-vm-mono text-[11px] uppercase tracking-[0.14em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold disabled:pointer-events-none disabled:opacity-30"
+            className="border border-vm-border-2 px-4 py-3.5 font-vm-mono text-[14px] uppercase tracking-[0.14em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold disabled:pointer-events-none disabled:opacity-30"
           >
             Go to Library
           </button>
         </div>
         {!backedUp && (
-          <p className="mt-2 text-center text-[9px] text-vm-dim">
+          <p className="mt-2 text-center text-[11px] text-vm-dim">
             Save the key before moving on — leaving this screen without it means losing it.
           </p>
         )}

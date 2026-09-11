@@ -109,12 +109,12 @@ export default function Vault() {
     <div className="grid lg:grid-cols-[340px_1fr]">
       <aside className="border-vm-border bg-vm-panel lg:min-h-[calc(100vh-6.75rem)] lg:border-r">
         <div className="border-b border-vm-border p-4">
-          <div className="mb-3 flex items-center justify-between text-[9px] uppercase tracking-[0.15em] text-vm-dim">
+          <div className="mb-3 flex items-center justify-between text-[11px] uppercase tracking-[0.15em] text-vm-dim">
             <span>02 / Vault Settings</span>
-            <span className="border border-vm-border-2 px-1.5 py-0.5 text-[8px] text-vm-mid">Step 2</span>
+            <span className="border border-vm-border-2 px-1.5 py-0.5 text-[10px] text-vm-mid">Step 2</span>
           </div>
 
-          <div className="mb-3 text-[9px] uppercase tracking-[0.15em] text-vm-dim">QR Symbol</div>
+          <div className="mb-3 text-[11px] uppercase tracking-[0.15em] text-vm-dim">QR Symbol</div>
           <QRSymbolGrid selected={qrSymbol} onSelect={setQrSymbol} />
 
           <div className="mt-4 mb-3 flex items-center gap-1.5">
@@ -123,7 +123,7 @@ export default function Vault() {
                 key={preset.label}
                 type="button"
                 onClick={() => setZoomLevel(preset.zoom)}
-                className={`flex-1 border px-2 py-1.5 font-vm-mono text-[8px] uppercase tracking-[0.1em] transition-colors ${
+                className={`flex-1 border px-2 py-1.5 font-vm-mono text-[10px] uppercase tracking-[0.1em] transition-colors ${
                   zoomLevel === preset.zoom
                     ? "border-vm-gold bg-vm-gold-bg text-vm-gold"
                     : "border-vm-border text-vm-mid hover:border-vm-gold-2 hover:text-vm-gold"
@@ -146,13 +146,13 @@ export default function Vault() {
             type="button"
             onClick={generateKey}
             disabled={generating}
-            className="mt-3 w-full border border-vm-gold-2 bg-vm-gold-bg px-4 py-3 font-vm-mono text-[10px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-40"
+            className="mt-3 w-full border border-vm-gold-2 bg-vm-gold-bg px-4 py-3 font-vm-mono text-[13px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-40"
           >
             {generating ? "Generating…" : result ? "Regenerate Pixel Key" : "Generate Pixel Key"}
           </button>
 
           {result && (
-            <p className="mt-2 text-[9px] leading-[1.7] text-vm-green">
+            <p className="mt-2 text-[11px] leading-[1.7] text-vm-green">
               Key issued for {result.key.maskedCount} masked pixels. Continuing to label…
             </p>
           )}
@@ -202,11 +202,11 @@ function Gate({ href, cta, title, body }: { href: string; cta: string; title: st
   return (
     <div className="flex min-h-[calc(100vh-6.75rem)] items-center justify-center p-8">
       <div className="w-full max-w-sm border border-vm-border-2 bg-vm-surface p-6 text-center">
-        <div className="mb-2 font-vm-sans text-sm font-bold text-vm-ink">{title}</div>
-        <p className="mb-4 text-[10px] leading-loose text-vm-mid">{body}</p>
+        <div className="mb-2 font-vm-sans text-base font-bold text-vm-ink">{title}</div>
+        <p className="mb-4 text-[13px] leading-loose text-vm-mid">{body}</p>
         <Link
           href={href}
-          className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+          className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
         >
           {cta}
         </Link>
@@ -233,7 +233,7 @@ function Slider({
   const id = `vm-${label.replace(/\s+/g, "-").toLowerCase()}`;
   return (
     <div className="mb-2.5 flex items-center gap-2">
-      <label htmlFor={id} className="w-[70px] flex-shrink-0 text-[9px] uppercase tracking-[0.08em] text-vm-dim">
+      <label htmlFor={id} className="w-[70px] flex-shrink-0 text-[11px] uppercase tracking-[0.08em] text-vm-dim">
         {label}
       </label>
       <input
@@ -245,7 +245,7 @@ function Slider({
         onChange={(e) => onChange(Number(e.target.value))}
         className="h-px flex-1 appearance-none bg-vm-border accent-vm-gold outline-none"
       />
-      <span className="min-w-[36px] text-right text-[10px] text-vm-gold">
+      <span className="min-w-[36px] text-right text-[13px] text-vm-gold">
         {value}
         {suffix}
       </span>
@@ -256,8 +256,8 @@ function Slider({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-vm-panel px-3 py-2">
-      <dt className="mb-0.5 text-[8px] uppercase tracking-[0.08em] text-vm-dim">{label}</dt>
-      <dd className="text-[13px] font-bold text-vm-gold">{value}</dd>
+      <dt className="mb-0.5 text-[10px] uppercase tracking-[0.08em] text-vm-dim">{label}</dt>
+      <dd className="text-[16px] font-bold text-vm-gold">{value}</dd>
     </div>
   );
 }
@@ -283,15 +283,15 @@ function DetailPanel({
 
   return (
     <div className="bg-vm-surface p-3.5">
-      <div className="mb-2.5 text-[9px] uppercase tracking-[0.1em] text-vm-dim">{title}</div>
+      <div className="mb-2.5 text-[11px] uppercase tracking-[0.1em] text-vm-dim">{title}</div>
       <div className="flex items-center justify-center overflow-hidden border border-vm-border bg-vm-bg p-4">
         <canvas ref={ref} className="block h-auto w-full max-w-[280px] [image-rendering:pixelated]" />
       </div>
       <dl className="mt-2 grid grid-cols-4 gap-px bg-vm-border">
         {readouts.map(([label, value]) => (
           <div key={label} className="bg-vm-panel px-1.5 py-1">
-            <dt className="text-[8px] text-vm-dim">{label}</dt>
-            <dd className="text-[10px] font-bold text-vm-ink">{value}</dd>
+            <dt className="text-[10px] text-vm-dim">{label}</dt>
+            <dd className="text-[13px] font-bold text-vm-ink">{value}</dd>
           </div>
         ))}
       </dl>

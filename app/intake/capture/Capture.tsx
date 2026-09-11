@@ -170,14 +170,14 @@ export default function Capture() {
     return (
       <div className="flex min-h-[calc(100vh-6.75rem)] items-center justify-center p-8">
         <div className="w-full max-w-sm border border-vm-border-2 bg-vm-surface p-6 text-center">
-          <div className="mb-2 font-vm-sans text-sm font-bold text-vm-ink">No active session</div>
-          <p className="mb-4 text-[10px] leading-loose text-vm-mid">
+          <div className="mb-2 font-vm-sans text-base font-bold text-vm-ink">No active session</div>
+          <p className="mb-4 text-[13px] leading-loose text-vm-mid">
             Intake needs a session type so the label format, attestation language, and key routing are set before
             anything is vaulted.
           </p>
           <Link
             href="/"
-            className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+            className="inline-block border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
           >
             Choose a session →
           </Link>
@@ -190,9 +190,9 @@ export default function Capture() {
     <div className="grid lg:grid-cols-[340px_1fr]">
       <aside className="border-vm-border bg-vm-panel lg:min-h-[calc(100vh-6.75rem)] lg:border-r">
         <div className="border-b border-vm-border p-4">
-          <div className="mb-3 flex items-center justify-between text-[9px] uppercase tracking-[0.15em] text-vm-dim">
+          <div className="mb-3 flex items-center justify-between text-[11px] uppercase tracking-[0.15em] text-vm-dim">
             <span>01 / Capture</span>
-            <span className="border border-vm-border-2 px-1.5 py-0.5 text-[8px] text-vm-mid">Step 1</span>
+            <span className="border border-vm-border-2 px-1.5 py-0.5 text-[10px] text-vm-mid">Step 1</span>
           </div>
 
           <div
@@ -207,9 +207,9 @@ export default function Capture() {
               dragging ? "border-vm-gold bg-vm-gold-bg" : "border-vm-border-2 bg-vm-bg hover:border-vm-gold-2"
             }`}
           >
-            <span className="text-2xl leading-none text-vm-dim">⬡</span>
-            <span className="font-vm-sans text-xs font-bold text-vm-ink">Drop image or browse</span>
-            <span className="text-[9px] leading-[1.9] text-vm-mid">
+            <span className="text-3xl leading-none text-vm-dim">⬡</span>
+            <span className="font-vm-sans text-sm font-bold text-vm-ink">Drop image or browse</span>
+            <span className="text-[11px] leading-[1.9] text-vm-mid">
               PNG · TIFF · BMP — lossless only
               <br />
               JPEG rejected at intake
@@ -232,11 +232,11 @@ export default function Capture() {
               <button
                 type="button"
                 onClick={() => cameraInputRef.current?.click()}
-                className="mt-2 w-full border border-vm-border-2 px-4 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+                className="mt-2 w-full border border-vm-border-2 px-4 py-2.5 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
               >
                 Photograph the work
               </button>
-              <p className="mt-1.5 text-[8px] leading-[1.7] text-vm-dim">
+              <p className="mt-1.5 text-[10px] leading-[1.7] text-vm-dim">
                 Cameras produce JPEG. Accepted, and flagged in the vault record as a lossy master.
               </p>
               <input
@@ -258,20 +258,20 @@ export default function Capture() {
             type="button"
             onClick={() => router.push("/intake/vault")}
             disabled={!allPassed || !captured}
-            className="mt-3 w-full border border-vm-gold-2 bg-vm-gold-bg px-4 py-3 font-vm-mono text-[10px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-25"
+            className="mt-3 w-full border border-vm-gold-2 bg-vm-gold-bg px-4 py-3 font-vm-mono text-[13px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)] disabled:pointer-events-none disabled:opacity-25"
           >
             Proceed to Vault →
           </button>
         </div>
 
         <div className="p-4">
-          <div className="mb-3 text-[9px] uppercase tracking-[0.15em] text-vm-dim">Quality checks</div>
+          <div className="mb-3 text-[11px] uppercase tracking-[0.15em] text-vm-dim">Quality checks</div>
           <div className="grid grid-cols-2 gap-px bg-vm-border">
             {checks.map((check, i) => (
               <div key={CHECK_LABELS[i]} className="bg-vm-surface p-2.5" data-check={CHECK_LABELS[i]}>
                 <div className="flex items-center gap-2">
                   <span
-                    className={`text-[11px] leading-none ${
+                    className={`text-[14px] leading-none ${
                       check.state === "pass"
                         ? "text-vm-green"
                         : check.state === "fail"
@@ -284,14 +284,14 @@ export default function Capture() {
                     {check.state === "pass" ? "✓" : check.state === "fail" ? "✕" : check.state === "running" ? "◌" : "○"}
                   </span>
                   <span
-                    className={`text-[9px] ${
+                    className={`text-[11px] ${
                       check.state === "pass" ? "text-vm-green" : check.state === "fail" ? "text-vm-red" : "text-vm-mid"
                     }`}
                   >
                     {check.label}
                   </span>
                 </div>
-                <div className="mt-1 text-[8px] leading-[1.6] text-vm-dim">{check.detail}</div>
+                <div className="mt-1 text-[10px] leading-[1.6] text-vm-dim">{check.detail}</div>
               </div>
             ))}
           </div>
@@ -300,7 +300,7 @@ export default function Capture() {
 
       <div className="p-5 lg:p-6">
         {!captured ? (
-          <p className="max-w-[52ch] text-[11px] leading-[2] text-vm-mid">
+          <p className="max-w-[52ch] text-[14px] leading-[2] text-vm-mid">
             Upload a high-resolution photograph of the artwork. The image must be lossless — PNG, TIFF, or BMP.
             Vaultmark checks format, resolution, and losslessness, then fingerprints the pixels before anything is
             vaulted.
@@ -309,7 +309,7 @@ export default function Capture() {
           <div className="flex flex-col gap-5">
             <div className="grid gap-5 xl:grid-cols-[minmax(0,320px)_1fr]">
               <div>
-                <div className="mb-2 text-[9px] uppercase tracking-[0.15em] text-vm-dim">Vaulted frame</div>
+                <div className="mb-2 text-[11px] uppercase tracking-[0.15em] text-vm-dim">Vaulted frame</div>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={captured.previewUrl}
@@ -319,7 +319,7 @@ export default function Capture() {
               </div>
 
               <div>
-                <div className="mb-2 text-[9px] uppercase tracking-[0.15em] text-vm-dim">Source</div>
+                <div className="mb-2 text-[11px] uppercase tracking-[0.15em] text-vm-dim">Source</div>
                 <dl className="grid grid-cols-2 gap-px bg-vm-border">
                   <Field label="File" value={captured.fileName} />
                   <Field label="Format" value={captured.format} />
@@ -328,12 +328,12 @@ export default function Capture() {
                 </dl>
                 {captured.source === "camera" && (
                   <div className="mt-2 border border-vm-amber/40 bg-vm-surface px-3 py-2">
-                    <span className="text-[9px] leading-[1.7] text-vm-amber">
+                    <span className="text-[11px] leading-[1.7] text-vm-amber">
                       Camera capture · lossy master — recorded on the vault record
                     </span>
                   </div>
                 )}
-                <p className="mt-2 text-[9px] leading-[1.7] text-vm-dim">
+                <p className="mt-2 text-[11px] leading-[1.7] text-vm-dim">
                   Centre-cropped to a square so the vault region samples undistorted artwork pixels.
                 </p>
               </div>
@@ -341,22 +341,22 @@ export default function Capture() {
 
             <div className="border border-vm-border bg-vm-surface p-4">
               <div className="mb-2 flex flex-wrap items-center gap-3">
-                <span className="text-[9px] uppercase tracking-[0.15em] text-vm-dim">Image fingerprint · SHA-256</span>
+                <span className="text-[11px] uppercase tracking-[0.15em] text-vm-dim">Image fingerprint · SHA-256</span>
                 <button
                   type="button"
                   onClick={copyFingerprint}
-                  className="ml-auto border border-vm-border-2 px-2.5 py-1 font-vm-mono text-[9px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+                  className="ml-auto border border-vm-border-2 px-2.5 py-1 font-vm-mono text-[11px] uppercase tracking-[0.1em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
                 >
                   Copy
                 </button>
               </div>
-              <p className="break-all font-vm-mono text-[10px] leading-[1.9] text-vm-gold">{captured.fingerprint}</p>
+              <p className="break-all font-vm-mono text-[13px] leading-[1.9] text-vm-gold">{captured.fingerprint}</p>
             </div>
           </div>
         )}
 
         {scanning && !captured && (
-          <p className="mt-4 text-[10px] tracking-[0.1em] text-vm-gold">Scanning…</p>
+          <p className="mt-4 text-[13px] tracking-[0.1em] text-vm-gold">Scanning…</p>
         )}
       </div>
     </div>
@@ -366,8 +366,8 @@ export default function Capture() {
 function Field({ label, value }: { label: string; value: string }) {
   return (
     <div className="bg-vm-surface p-2.5">
-      <dt className="mb-1 text-[8px] uppercase tracking-[0.1em] text-vm-dim">{label}</dt>
-      <dd className="break-all text-[10px] text-vm-ink">{value}</dd>
+      <dt className="mb-1 text-[10px] uppercase tracking-[0.1em] text-vm-dim">{label}</dt>
+      <dd className="break-all text-[13px] text-vm-ink">{value}</dd>
     </div>
   );
 }

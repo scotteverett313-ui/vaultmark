@@ -18,18 +18,18 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-vm-bg font-vm-mono text-xs text-vm-ink">
+      <body className="min-h-screen bg-vm-bg font-vm-mono text-sm text-vm-ink">
         <ToastProvider>
           <ProfileProvider>
             <SessionProvider>
             <header className="sticky top-0 z-50 flex h-[3.25rem] items-center gap-5 border-b border-vm-border bg-vm-panel px-7">
               <Link
                 href="/"
-                className="text-base font-bold tracking-[0.2em] text-vm-gold transition-opacity hover:opacity-75"
+                className="text-lg font-bold tracking-[0.2em] text-vm-gold transition-opacity hover:opacity-75"
               >
                 VAULTMARK
               </Link>
-              <span className="hidden text-[9px] tracking-[0.12em] text-vm-dim sm:inline">
+              <span className="hidden text-[11px] tracking-[0.12em] text-vm-dim sm:inline">
                 DIGITAL ART AUTHENTICATION
               </span>
               <HeaderNav />

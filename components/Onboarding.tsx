@@ -29,11 +29,11 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
     <div className="flex min-h-[calc(100vh-3.25rem)] items-center justify-center px-4 py-10">
       <div className="w-full max-w-[560px]">
         <div className="mb-5 flex items-center justify-between gap-4">
-          <span className="text-[11px] tracking-[0.2em] text-vm-dim">VAULTMARK · INTRODUCTION</span>
+          <span className="text-[14px] tracking-[0.2em] text-vm-dim">VAULTMARK · INTRODUCTION</span>
           <button
             type="button"
             onClick={onDone}
-            className="font-vm-mono text-[9px] uppercase tracking-[0.12em] text-vm-dim underline-offset-4 transition-colors hover:text-vm-gold hover:underline"
+            className="font-vm-mono text-[11px] uppercase tracking-[0.12em] text-vm-dim underline-offset-4 transition-colors hover:text-vm-gold hover:underline"
           >
             Skip
           </button>
@@ -45,19 +45,19 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
         >
           <Icon className="mb-4 h-7 w-7 text-vm-gold" strokeWidth={1.25} aria-hidden />
 
-          <div className="mb-1.5 text-[9px] uppercase tracking-[0.15em] text-vm-dim">{step.eyebrow}</div>
-          <h1 className="mb-4 font-vm-sans text-xl font-bold leading-tight tracking-[0.02em] text-vm-ink sm:text-2xl">
+          <div className="mb-1.5 text-[11px] uppercase tracking-[0.15em] text-vm-dim">{step.eyebrow}</div>
+          <h1 className="mb-4 font-vm-sans text-2xl font-bold leading-tight tracking-[0.02em] text-vm-ink sm:text-3xl">
             {step.title}
           </h1>
 
           {step.body.map((paragraph) => (
-            <p key={paragraph} className="mb-3 text-[11px] leading-[1.9] text-vm-mid last:mb-0">
+            <p key={paragraph} className="mb-3 text-[14px] leading-[1.9] text-vm-mid last:mb-0">
               {paragraph}
             </p>
           ))}
 
           {step.note && (
-            <p className="mt-4 border-l-2 border-vm-gold-2 bg-vm-gold-bg px-3 py-2.5 text-[10px] leading-[1.8] text-vm-gold">
+            <p className="mt-4 border-l-2 border-vm-gold-2 bg-vm-gold-bg px-3 py-2.5 text-[13px] leading-[1.8] text-vm-gold">
               {step.note}
             </p>
           )}
@@ -77,7 +77,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
             ))}
           </div>
 
-          <span className="font-vm-mono text-[9px] tracking-[0.1em] text-vm-dim">
+          <span className="font-vm-mono text-[11px] tracking-[0.1em] text-vm-dim">
             {index + 1} / {ONBOARDING_STEPS.length}
           </span>
 
@@ -86,7 +86,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
               <button
                 type="button"
                 onClick={() => setIndex((i) => i - 1)}
-                className="border border-vm-border-2 px-3 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
+                className="border border-vm-border-2 px-3 py-2.5 font-vm-mono text-[13px] uppercase tracking-[0.12em] text-vm-mid transition-colors hover:border-vm-gold hover:text-vm-gold"
               >
                 ← Back
               </button>
@@ -94,7 +94,7 @@ export default function Onboarding({ onDone }: { onDone: () => void }) {
             <button
               type="button"
               onClick={() => (isLast ? onDone() : setIndex((i) => i + 1))}
-              className="border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[10px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
+              className="border border-vm-gold-2 bg-vm-gold-bg px-4 py-2.5 font-vm-mono text-[13px] uppercase tracking-[0.14em] text-vm-gold transition-colors hover:bg-[rgba(200,168,74,0.16)]"
             >
               {isLast ? "Get started →" : "Next →"}
             </button>
