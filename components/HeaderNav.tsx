@@ -10,7 +10,7 @@ export default function HeaderNav() {
   const pathname = usePathname();
   const { restored, sessionType, pieceCount } = useSession();
 
-  if (!restored || !sessionType) return null;
+  if (!restored || !sessionType || pathname === "/verify") return null;
 
   return (
     <div className="ml-auto flex items-center gap-3">

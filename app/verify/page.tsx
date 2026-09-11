@@ -1,13 +1,11 @@
-import ScaffoldScreen from "@/components/internal/ScaffoldScreen";
+import type { Metadata } from "next";
+import Verify from "./Verify";
+
+export const metadata: Metadata = {
+  title: "Verify",
+  description: "Check an artwork against the key issued for it. Runs in your browser; nothing is uploaded.",
+};
 
 export default function VerifyPage() {
-  return (
-    <ScaffoldScreen
-      screenNumber="09"
-      screenName="Public Verify"
-      route="/verify"
-      buildStep="Step 13 — Public Verify page"
-      description="Standalone, stateless verification: paste a key and upload an image. Three-layer check — vault fingerprint, scramble map, pixel hash — no login required."
-    />
-  );
+  return <Verify />;
 }

@@ -7,9 +7,8 @@ import { useSession } from "@/components/SessionContext";
 import { useIntake, type CaptureSource } from "@/components/IntakeContext";
 import { useToast } from "@/components/Toast";
 import { sha256Hex } from "@/lib/engine";
+import { MAX_CAPTURE_SIZE, MIN_CAPTURE_SIZE, loadImage, toVaultSquare } from "@/lib/capture";
 
-const MAX_CAPTURE_SIZE = 800;
-const MIN_CAPTURE_SIZE = 400;
 const ACCEPTED = ".png,.tiff,.tif,.bmp,image/png,image/tiff,image/bmp";
 
 type CheckState = "idle" | "running" | "pass" | "fail";
@@ -123,26 +122,15 @@ export default function Capture() {
         source === "camera" ? "Source" : "Lossless",
       );
 
-      const canvas = document.createElement("canvas");
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        URL.revokeObjectURL(objectUrl);
+      const square = toVaultSquare(image);
+      URL.revokeObjectURL(objectUrl);
+      if (!square) {
         updateCheck(3, { label: CHECK_LABELS[3], state: "fail", detail: "Canvas unavailable in this browser" });
         setScanning(false);
         return;
       }
 
-      // Centre-crop to a square rather than squashing: the vault region samples
-      // real artwork pixels, so distorting the source would distort the key.
-      const shortEdge = Math.min(image.naturalWidth, image.naturalHeight);
-      const sx = (image.naturalWidth - shortEdge) / 2;
-      const sy = (image.naturalHeight - shortEdge) / 2;
-      ctx.drawImage(image, sx, sy, shortEdge, shortEdge, 0, 0, size, size);
-      URL.revokeObjectURL(objectUrl);
-
-      const pixels = ctx.getImageData(0, 0, size, size);
+      const { pixels, canvas } = square;
       let fingerprint = "";
       await runCheck(3, async () => {
         fingerprint = await sha256Hex(pixels.data);
@@ -382,13 +370,4 @@ function Field({ label, value }: { label: string; value: string }) {
       <dd className="break-all text-[10px] text-vm-ink">{value}</dd>
     </div>
   );
-}
-
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error("decode failed"));
-    image.src = src;
-  });
 }
